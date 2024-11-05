@@ -11,8 +11,6 @@ public class DisplayCombinations : MonoBehaviour
     public List<Sprite> CardSprites;
     public GameObject DisplayCPrefab, DisplayMPrefab, CardPrefab;
 
-    List<CardCombination> cardCombinations = new List<CardCombination>();
-
     private void Start()
     {
         Display.gameObject.SetActive(false);
