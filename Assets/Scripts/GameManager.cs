@@ -16,9 +16,9 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     public GameObject pointTransfer;
 
-    GameObject FinishText, leftButtons, rightButtons, meses;
+    GameObject FinishText, meses;
     TMP_Text leftPointText, rightPointText, koiText, roundCountText;
-    Button LB_1pt, LB_5pt, LB_10pt, RB_1pt, RB_5pt, RB_10pt, KoiButton, EndRoundButton;
+    Button KoiButton, EndRoundButton;
 
     public static readonly List<string> MONTHS = new List<string>() { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
 
@@ -29,8 +29,6 @@ public class GameManager : MonoBehaviour
         Transform PanelCont = FindObjectOfType<Canvas>().transform.Find("Panel Contadores");
 
         FinishText = PanelCont.Find("FINISH").gameObject;
-        leftButtons = PanelCont.Find("LeftPointsButton").gameObject;
-        rightButtons = PanelCont.Find("RightPointsButton").gameObject;
         meses = PanelCont.Find("Month").gameObject;
         leftPointText = PanelCont.Find("LeftPointsDisplay").GetComponentInChildren<TMP_Text>();
         rightPointText = PanelCont.Find("RightPointsDisplay").GetComponentInChildren<TMP_Text>();
@@ -38,19 +36,6 @@ public class GameManager : MonoBehaviour
         roundCountText = PanelCont.Find("RoundCount").GetComponent<TMP_Text>();
         KoiButton = PanelCont.Find("KoiButton").GetComponent<Button>();
         EndRoundButton = PanelCont.Find("EndRoundButton").GetComponent<Button>();
-        LB_1pt = leftButtons.transform.Find("+1").GetComponent<Button>();
-        LB_5pt = leftButtons.transform.Find("+5").GetComponent<Button>();
-        LB_10pt = leftButtons.transform.Find("+10").GetComponent<Button>();
-        RB_1pt = rightButtons.transform.Find("+1").GetComponent<Button>();
-        RB_5pt = rightButtons.transform.Find("+5").GetComponent<Button>();
-        RB_10pt = rightButtons.transform.Find("+10").GetComponent<Button>();
-
-        LB_1pt.onClick.AddListener(() => { SetPoints(-1); });
-        LB_5pt.onClick.AddListener(() => { SetPoints(-5); });
-        LB_10pt.onClick.AddListener(() => { SetPoints(-10); });
-        RB_1pt.onClick.AddListener(() => { SetPoints(1); });
-        RB_5pt.onClick.AddListener(() => { SetPoints(5); });
-        RB_10pt.onClick.AddListener(() => { SetPoints(10); });
 
         KoiButton.onClick.RemoveAllListeners();
         KoiButton.onClick.AddListener(() => { Koi(); });
@@ -200,12 +185,6 @@ public class GameManager : MonoBehaviour
 
     void EnableButtons(bool enable)
     {
-        LB_1pt.enabled = enable;
-        LB_5pt.enabled = enable;
-        LB_10pt.enabled = enable;
-        RB_1pt.enabled = enable;
-        RB_5pt.enabled = enable;
-        RB_10pt.enabled = enable;
         KoiButton.enabled = enable;
     }
 

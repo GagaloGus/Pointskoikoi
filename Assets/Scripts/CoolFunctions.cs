@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public static class CoolFunctions
@@ -69,4 +70,8 @@ public static class CoolFunctions
         return lista;
     }
 
+    public static string RemoveNumberFromString(string str)
+    {
+        return Regex.Replace(str, @"^\d+\s*", "");
+    }
 }
