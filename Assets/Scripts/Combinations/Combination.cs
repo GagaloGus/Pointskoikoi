@@ -71,6 +71,18 @@ public class Combination : MonoBehaviour
         reborde.SetActive(SelectToggle.isOn);
     }
 
+    public void SetExtraPoints(int p)
+    {
+        extraCardsAdded = p;
+        ExtraText.text = p.ToString();
+    }
+
+    public void CloseInfoButton()
+    {
+        toggleInfo = true;
+        ToggleInfoButton(true);
+    }
+
     public void ToggleSelectedCombi()
     {
         reborde.SetActive(SelectToggle.isOn);
@@ -108,7 +120,7 @@ public class Combination : MonoBehaviour
     }
 
     //Funcion del boton
-    public void ToggleInfoButton()
+    public void ToggleInfoButton(bool forceInstant)
     {
         toggleInfo = !toggleInfo;
 
@@ -118,31 +130,40 @@ public class Combination : MonoBehaviour
         extrabutton.transform.GetChild(0).GetComponent<Image>().sprite = toggleInfo ? openSprite : closeSprite;
 
         StopAllCoroutines();
-        StartCoroutine(MoveInfoPanel(toggleInfo ? 1100 * (openRight ? 1 : -1) : 0));
+
+        StartCoroutine(MoveInfoPanel((toggleInfo ? 1100 * (openRight ? 1 : -1) : 0), forceInstant));
+
+
     }
 
-    IEnumerator MoveInfoPanel(float targetX)
+    IEnumerator MoveInfoPanel(float targetX, bool forceInsant)
     {
         bool right = infoRect.anchoredPosition.x - targetX < 0;
         float speed = 3000;
 
-        if (right) 
+        if (!forceInsant)
         {
-            while (infoRect.anchoredPosition.x - targetX < -0.1f)
+            if (right) 
             {
-                infoRect.anchoredPosition += Vector2.right * speed * Time.deltaTime;
-                yield return null;
+                while (infoRect.anchoredPosition.x - targetX < -0.1f)
+                {
+                    infoRect.anchoredPosition += Vector2.right * speed * Time.deltaTime;
+                    yield return null;
+                }
+            }
+            else
+            {
+                while (infoRect.anchoredPosition.x - targetX > 0.1f)
+                {
+                    infoRect.anchoredPosition += Vector2.right *  -1 * speed * Time.deltaTime;
+                    yield return null;
+                }
             }
         }
         else
         {
-            while (infoRect.anchoredPosition.x - targetX > 0.1f)
-            {
-                infoRect.anchoredPosition += Vector2.right *  -1 * speed * Time.deltaTime;
-                yield return null;
-            }
+            infoRect.anchoredPosition = new Vector2(targetX, 0);
         }
-
         
     }
 }

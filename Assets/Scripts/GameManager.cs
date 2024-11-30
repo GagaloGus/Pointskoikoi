@@ -2,29 +2,146 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+public enum Win_States { Player1, Player2, Tie }
+public enum GameMode { PointThief, MostPoints }
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Points")]
-    public int offsetPoints;
-    public int originalPointAmount = 30;
-    public int koiCounter = 1, maxRounds = 6;
-    public Color[] koiIncreaseColors;
-    public int roundCount;
+    public static GameManager instance;
 
-    [Header("References")]
-    public GameObject pointTransfer;
+    public int pts1, pts2, offsetPoints, originalPts = 30, round, maxRounds, koi;
+    public bool p1Choose, p1LastChoose;
+    public GameMode gameMode;
 
-    GameObject FinishText, meses;
-    TMP_Text leftPointText, rightPointText, koiText, roundCountText;
-    Button KoiButton, EndRoundButton;
+    public Color[] koiColors;
+
+    public List<Sprite> CardSprites;
 
     public static readonly List<string> MONTHS = new List<string>() { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
-
     public static readonly string ROUNDCOUNT_KEY = "ROUNDKEY", ROUNDTEXT_KEY = "ROUNDTEXTKEY", OFFSETPOINTS_KEY = "OFFSET";
 
     private void Awake()
+    {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+        if (!instance) //instance  != null  //Detecta que no haya otro manager en la escena.
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject); //Si hay otro manager lo destruye.
+        }
+        instance = this;
+
+        offsetPoints = 0;
+        pts1 = pts2 = offsetPoints;
+        p1LastChoose = true;
+    }
+
+    public void Koi()
+    {
+        koi++;
+
+        GameEventsManager.instance.gameEvents.Koi();
+    }
+
+    public void AddPoints(List<CombiPointsPair> pairs)
+    {
+        int pts = 0;
+        foreach (CombiPointsPair combi in pairs)
+        {
+            pts += combi.combi.points + combi.extraCards;
+        }
+        offsetPoints += pts;
+        AddPoints();
+    }
+    public void AddPoints()
+    {
+        //Si pointdif es negativo -> gana player1 (izquierda)
+        int pointDif = offsetPoints * (p1Choose ? -1 : 1);
+
+        pts1 -= pointDif;
+        pts2 += pointDif;
+
+        GameEventsManager.instance.gameEvents.OnPointsAdded();
+
+        CoolFunctions.Invoke(this,() =>
+        {
+            if (pointDif >= Mathf.Abs(originalPts))
+            {
+                GameEventsManager.instance.gameEvents.OnWin(Get_WinCondition());
+            }
+            else
+            {
+                NextRound();
+            }
+        }, 1);
+
+        
+    }
+
+    public void NextRound()
+    {
+        round++;
+        GameEventsManager.instance.gameEvents.OnRoundChange(round);
+        if(round >= maxRounds)
+        {
+            GameEventsManager.instance.gameEvents.OnWin(Get_WinCondition());
+        }
+        else
+        {
+            ResetSetup();
+        }
+    }
+
+    public void ResetSetup()
+    {
+        GameEventsManager.instance.gameEvents.ResetSetup();
+    }
+
+    public void ResetGame()
+    {
+        offsetPoints = 0;
+        pts1 = pts2 = originalPts;
+        round = 1;
+        koi = 1;
+        GameEventsManager.instance.gameEvents.ResetGame();
+        GameEventsManager.instance.gameEvents.ResetSetup();
+    }
+
+    public Win_States Get_WinCondition()
+    {
+        Win_States win;
+
+        if (Mathf.Abs(pts1) >= originalPts)
+            win = Win_States.Player1;
+        else if (Mathf.Abs(pts2) >= originalPts)
+            win = Win_States.Player2;
+        else
+            win = Win_States.Tie;
+
+        return win;
+    }
+
+    private void OnApplicationQuit()
+    {
+        Screen.sleepTimeout = SleepTimeout.SystemSetting;
+
+        //Añadir playerprefs
+    }
+
+    public void ChangeScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
+
+    /*private void Awake()
     {
         Transform PanelCont = FindObjectOfType<Canvas>().transform.Find("Panel Contadores");
 
@@ -42,12 +159,11 @@ public class GameManager : MonoBehaviour
 
         leftPointText.text = originalPointAmount.ToString();
         rightPointText.text = originalPointAmount.ToString();
-        ResetGame();
+        ResetSetup();
     }
 
     private void Start()
     {
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
         if (PlayerPrefs.HasKey(ROUNDTEXT_KEY)) { roundCountText.text = PlayerPrefs.GetString(ROUNDTEXT_KEY); }
         if (PlayerPrefs.HasKey(OFFSETPOINTS_KEY))
@@ -62,15 +178,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void OnApplicationQuit()
-    {
-        Screen.sleepTimeout = SleepTimeout.SystemSetting;
 
-
-        PlayerPrefs.SetInt(OFFSETPOINTS_KEY, offsetPoints);
-        PlayerPrefs.SetInt(ROUNDCOUNT_KEY, roundCount);
-        PlayerPrefs.SetString(ROUNDTEXT_KEY, roundCountText.text);
-    }
 
     public void SetPoints(int pointDif)
     {
@@ -137,20 +245,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ResetGame()
-    {
-        offsetPoints = 0;
-        roundCount = 1;
 
-        roundCountText.text = "";
-
-        EndRoundButton.enabled = true;
-
-        StopAllCoroutines();
-        StartCoroutine(PointNumberCounting(0.05f));
-
-        ResetSetup();
-    }
 
     void ResetSetup()
     {
@@ -198,50 +293,6 @@ public class GameManager : MonoBehaviour
         koiText.text = $"<size=60>koi count</size>\r\nx{koiCounter}";
     }
 
-    IEnumerator PointNumberCounting(float speed)
-    {
-        Animator L_anim = leftPointText.gameObject.GetComponent<Animator>(), R_anim = rightPointText.gameObject.GetComponent<Animator>();
-
-        int L_newNum = originalPointAmount - offsetPoints, R_newNum = originalPointAmount + offsetPoints,
-            L_oldNum = int.Parse(leftPointText.text), R_oldNum = int.Parse(rightPointText.text);
-
-        float speedRed = Mathf.Abs(L_newNum - L_oldNum);
-
-        if (speedRed <= 0) { speedRed = 1; }
-        speedRed = 1 / (Mathf.Log(speedRed, 8));
-
-        while (L_oldNum != L_newNum)
-        {
-            if (L_oldNum < L_newNum)
-            {
-                L_oldNum++; R_oldNum--;
-            }
-            else if (L_oldNum > L_newNum)
-            {
-                L_oldNum--; R_oldNum++;
-            }
-
-            leftPointText.text = L_oldNum.ToString();
-            rightPointText.text = R_oldNum.ToString();
-
-            if (int.Parse(leftPointText.text) > originalPointAmount * 2) { leftPointText.text = (originalPointAmount * 2).ToString(); }
-            else if (int.Parse(leftPointText.text) < 0) { leftPointText.text = 0.ToString(); }
-            else
-            {
-                L_anim.SetTrigger("bounce");
-
-            }
-
-            if (int.Parse(rightPointText.text) > originalPointAmount * 2) { rightPointText.text = (originalPointAmount * 2).ToString(); }
-            else if (int.Parse(rightPointText.text) < 0) { rightPointText.text = 0.ToString(); }
-            else
-            {
-                R_anim.SetTrigger("bounce");
-
-            }
-
-            yield return new WaitForSeconds(speed * speedRed);
-        }
-    }
-
+    
+*/
 }

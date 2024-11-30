@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2093807686930823403}
   - component: {fileID: 2718584115287480096}
   m_Layer: 5
-  m_Name: points
+  m_Name: point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5472904324367723}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 30
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 433666483114728782}
   - component: {fileID: 7985528950236980567}
   - component: {fileID: 4995871358426460878}
+  - component: {fileID: 7753092354082675360}
   m_Layer: 5
   m_Name: point_add
   m_TagString: Untagged
@@ -301,7 +302,7 @@ Animator:
   m_GameObject: {fileID: 813753926966743104}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 4d3b12e25ded23945b68c2e86205b822, type: 2}
+  m_Controller: {fileID: 9100000, guid: b8c33d235b85637419bccd8d6f086c81, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -312,6 +313,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7753092354082675360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813753926966743104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e7c9d50cb81de64f8e8c5ceb9f329ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1290004720424309073
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6764709224505799891}
   - component: {fileID: 8544603811040738623}
-  - component: {fileID: 4766431833920008068}
+  - component: {fileID: 6905434053144644808}
   m_Layer: 5
   m_Name: PointsDisplay
   m_TagString: Untagged
@@ -359,7 +372,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1290004720424309073}
   m_CullTransparentMesh: 1
---- !u!114 &4766431833920008068
+--- !u!114 &6905434053144644808
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

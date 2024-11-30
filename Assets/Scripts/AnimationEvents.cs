@@ -8,4 +8,15 @@ public class AnimationEvents : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    public void DeactivateGameObject()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void AddedPoints()
+    {
+        FindObjectOfType<PointHandler>().UpdateUIPoints();
+        gameObject.SetActive(false);
+    }
 }
