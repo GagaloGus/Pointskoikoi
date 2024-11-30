@@ -21,6 +21,7 @@ Library: C:\Users\Guso\Desktop\Guayaba\Github\Pointskoikoi\Temp\BurstOutput\temp
 --assembly-defines=Unity.Collections.LowLevel.ILSupport;
 --assembly-defines=Unity.InternalAPIEngineBridge.001;
 --assembly-defines=Unity.Mathematics;
+--assembly-defines=Unity.Postprocessing.Runtime;
 --assembly-defines=Unity.TextMeshPro;
 --assembly-defines=UnityEngine;
 --generate-link-xml=Temp\burst.link.xml

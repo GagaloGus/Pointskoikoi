@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,7 @@ public class GameHandler : MonoBehaviour
         GameEventsManager.instance.gameEvents.onWin += Win;
         GameEventsManager.instance.gameEvents.onRoundChange += ChangeRound;
         GameEventsManager.instance.gameEvents.resetSetup += ResetSetup;
+        GameEventsManager.instance.gameEvents.resetGame += ResetGame;
         GameEventsManager.instance.gameEvents.koi += Koi;
         GameEventsManager.instance.gameEvents.onPointsAdded += AddPoints;
     }
@@ -25,6 +27,7 @@ public class GameHandler : MonoBehaviour
         GameEventsManager.instance.gameEvents.onWin -= Win;
         GameEventsManager.instance.gameEvents.onRoundChange -= ChangeRound;
         GameEventsManager.instance.gameEvents.resetSetup -= ResetSetup;
+        GameEventsManager.instance.gameEvents.resetGame -= ResetGame;
         GameEventsManager.instance.gameEvents.koi -= Koi;
         GameEventsManager.instance.gameEvents.onPointsAdded -= AddPoints;
     }
@@ -61,7 +64,7 @@ public class GameHandler : MonoBehaviour
         if (offsetPoints < 0) { color1 = "green"; color2 = "red"; }
         else if (offsetPoints > 0) { color1 = "red"; color2 = "green"; }
 
-        roundCountText.text = $"<b>Ronda {round}</b>\r\n<color={color1}>{originalPointAmount - offsetPoints}</color> / <color={color2}>{originalPointAmount + offsetPoints}</color>\r\n\r\n";
+        roundCountText.text = $"<b>Ronda {round}</b>\n<color={color1}>{originalPointAmount - offsetPoints}</color> / <color={color2}>{originalPointAmount + offsetPoints}</color>\n\n";
     }
 
     void ChangeMonthCards()
@@ -84,17 +87,22 @@ public class GameHandler : MonoBehaviour
         EnableButtons(false);
     }
 
-    void ResetSetup()
+    void ResetGame()
     {
-        EnableButtons(true);
-
         FinishText.SetActive(false);
         FinishText.transform.Find("1").gameObject.SetActive(false);
         FinishText.transform.Find("2").gameObject.SetActive(false);
         FinishText.transform.Find("E").gameObject.SetActive(false);
 
+        roundCountText.text = $"<b>Ronda 1</b>\n";
+    }
+
+    void ResetSetup()
+    {
+        EnableButtons(true);
+
         koiText.color = Color.white;
-        koiText.text = $"<size=60>koi count</size>\r\nx1";
+        koiText.text = $"<size=60>koi count</size>\nx1";
 
         ChangeMonthCards();
     }

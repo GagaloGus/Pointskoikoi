@@ -23,12 +23,14 @@ public class PointHandler : MonoBehaviour
     {
         GameEventsManager.instance.gameEvents.onPointsAdded += AddPoints;
         GameEventsManager.instance.gameEvents.resetGame += ResetGame;
+        GameEventsManager.instance.gameEvents.resetSetup += ResetSetup;
     }
 
     private void OnDisable()
     {
         GameEventsManager.instance.gameEvents.onPointsAdded -= AddPoints;
         GameEventsManager.instance.gameEvents.resetGame -= ResetGame;
+        GameEventsManager.instance.gameEvents.resetSetup += ResetSetup;
     }
 
     private void Awake()
@@ -57,6 +59,24 @@ public class PointHandler : MonoBehaviour
     {
         (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd).
             GetComponent<Animator>().SetTrigger("add");
+        float t = CalculatePointCountingDuration(0.1f);
+        print(t);
+        CoolFunctions.Invoke(this, () =>
+        {
+            GameManager.instance.AfterPointsUI();
+        }, t+1);
+    }
+
+    float CalculatePointCountingDuration(float speed)
+    {
+        // Diferencia absoluta entre los puntos iniciales y finales
+        int totalSteps = Mathf.Abs(GameManager.instance.pointsToAdd) * 2 + 1;
+
+        // Velocidad reducida promedio basada en el rango de valores
+        float averageSpeedRed = 1 / Mathf.Log(Mathf.Max(totalSteps / 2f, 1), 8);
+
+        // Tiempo total es pasos multiplicados por tiempo por paso
+        return totalSteps * speed * averageSpeedRed;
     }
 
     void ResetGame()
@@ -95,7 +115,7 @@ public class PointHandler : MonoBehaviour
     public void HoldPoints(List<CombiPointsPair> pairs, int pts)
     {
         GameManager.instance.p1LastChoose = GameManager.instance.p1Choose;
-        GameManager.instance.offsetPoints = pts;
+        GameManager.instance.pointsToAdd = pts * (GameManager.instance.p1Choose ? -1 : 1); ;
         print($"Holdear puntos {pairs.Count}");
         TMP_Text t = (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd);
 
@@ -114,14 +134,21 @@ public class PointHandler : MonoBehaviour
         }
     }
 
+    Coroutine pointNumberCountingCoroutine;
+
     public void UpdateUIPoints()
     {
         //Si pointdif es negativo -> gana player1 (izquierda)
         int pointDif = GameManager.instance.pts1 - GameManager.instance.pts2;
         bool player1 = pointDif < 0;
 
-        StopAllCoroutines();
-        StartCoroutine(PointNumberCounting(0.1f));
+        if(pointNumberCountingCoroutine != null)
+        {
+            StopCoroutine(pointNumberCountingCoroutine);
+            pointNumberCountingCoroutine = null;
+        }
+
+        pointNumberCountingCoroutine = StartCoroutine(PointNumberCounting(0.1f));
 
         /*//Lanza un numerito entre puntuaciones
         Transform pt = Instantiate(pointTransfer).transform;
@@ -185,5 +212,7 @@ public class PointHandler : MonoBehaviour
 
             yield return new WaitForSeconds(speed * speedRed);
         }
+
+        print("Se termino la corrutina");
     }
 }

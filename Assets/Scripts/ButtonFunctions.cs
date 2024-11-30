@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
-
+using UnityEngine; 
 public class ButtonFunctions : MonoBehaviour
 {
     public void NextRound()

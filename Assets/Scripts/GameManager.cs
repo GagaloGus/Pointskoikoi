@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public int pts1, pts2, offsetPoints, originalPts = 30, round, maxRounds, koi;
+    public int pts1, pts2, offsetPoints, pointsToAdd, originalPts = 30, round, maxRounds, koi;
     public bool p1Choose, p1LastChoose;
     public GameMode gameMode;
 
@@ -50,51 +50,40 @@ public class GameManager : MonoBehaviour
         GameEventsManager.instance.gameEvents.Koi();
     }
 
-    public void AddPoints(List<CombiPointsPair> pairs)
-    {
-        int pts = 0;
-        foreach (CombiPointsPair combi in pairs)
-        {
-            pts += combi.combi.points + combi.extraCards;
-        }
-        offsetPoints += pts;
-        AddPoints();
-    }
     public void AddPoints()
     {
-        //Si pointdif es negativo -> gana player1 (izquierda)
-        int pointDif = offsetPoints * (p1Choose ? -1 : 1);
+        //Si pointsToAdd es negativo -> gana player1 (izquierda)
 
-        pts1 -= pointDif;
-        pts2 += pointDif;
+        pts1 -= pointsToAdd;
+        pts2 += pointsToAdd;
+        offsetPoints += pointsToAdd;
 
         GameEventsManager.instance.gameEvents.OnPointsAdded();
-
-        CoolFunctions.Invoke(this,() =>
-        {
-            if (pointDif >= Mathf.Abs(originalPts))
-            {
-                GameEventsManager.instance.gameEvents.OnWin(Get_WinCondition());
-            }
-            else
-            {
-                NextRound();
-            }
-        }, 1);
-
-        
     }
 
-    public void NextRound()
+    public void AfterPointsUI()
     {
-        round++;
-        GameEventsManager.instance.gameEvents.OnRoundChange(round);
-        if(round >= maxRounds)
+        if (Mathf.Abs(offsetPoints) >= originalPts)
         {
             GameEventsManager.instance.gameEvents.OnWin(Get_WinCondition());
         }
         else
         {
+            NextRound();
+        }
+    }
+
+    public void NextRound()
+    {
+        round++;
+        print("Next round "+ round);
+        if(round > maxRounds)
+        {
+            GameEventsManager.instance.gameEvents.OnWin(Get_WinCondition());
+        }
+        else
+        {
+            GameEventsManager.instance.gameEvents.OnRoundChange(round);
             ResetSetup();
         }
     }
@@ -118,9 +107,9 @@ public class GameManager : MonoBehaviour
     {
         Win_States win;
 
-        if (Mathf.Abs(pts1) >= originalPts)
+        if (Mathf.Abs(pts1) > originalPts)
             win = Win_States.Player1;
-        else if (Mathf.Abs(pts2) >= originalPts)
+        else if (Mathf.Abs(pts2) > originalPts)
             win = Win_States.Player2;
         else
             win = Win_States.Tie;
