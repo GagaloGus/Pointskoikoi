@@ -19,6 +19,9 @@ public class PointHandler : MonoBehaviour
         pairsP1 = new List<CombiPointsPair>(),
         pairsP2 = new List<CombiPointsPair>();
 
+    GameHandler gameHandler;
+    bool resetGame;
+
     private void OnEnable()
     {
         GameEventsManager.instance.gameEvents.onPointsAdded += AddPoints;
@@ -35,7 +38,7 @@ public class PointHandler : MonoBehaviour
 
     private void Awake()
     {
-        Transform PanelCont = FindObjectOfType<Canvas>().transform.Find("Panel Contadores");
+        Transform PanelCont = transform.Find("Panel Contadores");
         Transform p1 = PanelCont.Find("LeftPointsDisplay"), p2 = PanelCont.Find("RightPointsDisplay");
 
         PointPanel = FindObjectOfType<CombiChosePanel>(true).gameObject;
@@ -46,6 +49,8 @@ public class PointHandler : MonoBehaviour
 
         p1addpt = PanelCont.Find("AddLeftPoints").GetComponent<Button>();
         p2addpt = PanelCont.Find("AddRightPoints").GetComponent<Button>();
+
+        gameHandler = GetComponent<GameHandler>();
     }
 
     void Start()
@@ -57,32 +62,17 @@ public class PointHandler : MonoBehaviour
 
     void AddPoints()
     {
+        resetGame = false;
         (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd).
             GetComponent<Animator>().SetTrigger("add");
-        float t = CalculatePointCountingDuration(0.1f);
-        print(t);
-        CoolFunctions.Invoke(this, () =>
-        {
-            GameManager.instance.AfterPointsUI();
-        }, t+1);
-    }
-
-    float CalculatePointCountingDuration(float speed)
-    {
-        // Diferencia absoluta entre los puntos iniciales y finales
-        int totalSteps = Mathf.Abs(GameManager.instance.pointsToAdd) * 2 + 1;
-
-        // Velocidad reducida promedio basada en el rango de valores
-        float averageSpeedRed = 1 / Mathf.Log(Mathf.Max(totalSteps / 2f, 1), 8);
-
-        // Tiempo total es pasos multiplicados por tiempo por paso
-        return totalSteps * speed * averageSpeedRed;
     }
 
     void ResetGame()
     {
         player1Pt.text = GameManager.instance.originalPts.ToString();
         player2Pt.text = GameManager.instance.originalPts.ToString();
+        resetGame = true;
+        UpdateUIPoints();
     }
 
     void ResetSetup()
@@ -91,11 +81,11 @@ public class PointHandler : MonoBehaviour
         pairsP2 = new List<CombiPointsPair>();
         player1ptAdd.gameObject.SetActive(false);
         player2ptAdd.gameObject.SetActive(false);
-        UpdateUIPoints();
     }
 
     public void ActivatePointPanel(bool player1)
     {
+        gameHandler.EnableButtons(false);
         GameManager.instance.p1Choose = player1;
 
         PointPanel.SetActive(true);
@@ -108,21 +98,17 @@ public class PointHandler : MonoBehaviour
 
     public void CancelHoldPoints()
     {
+        gameHandler.EnableButtons(true);
         GameManager.instance.p1Choose = GameManager.instance.p1LastChoose;
         print("Cancelao");
     }
 
     public void HoldPoints(List<CombiPointsPair> pairs, int pts)
     {
+        gameHandler.EnableButtons(true);
         GameManager.instance.p1LastChoose = GameManager.instance.p1Choose;
         GameManager.instance.pointsToAdd = pts * (GameManager.instance.p1Choose ? -1 : 1); ;
         print($"Holdear puntos {pairs.Count}");
-        TMP_Text t = (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd);
-
-        player1ptAdd.gameObject.SetActive(GameManager.instance.p1Choose);
-        player2ptAdd.gameObject.SetActive(!GameManager.instance.p1Choose);
-
-        t.text = "+" + pts;
 
         if (GameManager.instance.p1Choose)
         {
@@ -132,33 +118,48 @@ public class PointHandler : MonoBehaviour
         {
             pairsP2 = new List<CombiPointsPair>(pairs);
         }
+
+        if (pts != 0)
+        {
+            TMP_Text t = (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd);
+
+            player1ptAdd.gameObject.SetActive(GameManager.instance.p1Choose);
+            player2ptAdd.gameObject.SetActive(!GameManager.instance.p1Choose);
+
+            t.text = "+" + pts;
+        }
+        else
+        {
+            player1ptAdd.gameObject.SetActive(false);
+            player2ptAdd.gameObject.SetActive(false);
+        }
+        
     }
 
-    Coroutine pointNumberCountingCoroutine;
-
     public void UpdateUIPoints()
+    {
+        StopAllCoroutines();
+        StartCoroutine(UpdateUIPointsCoroutine());
+    }
+
+    IEnumerator UpdateUIPointsCoroutine()
     {
         //Si pointdif es negativo -> gana player1 (izquierda)
         int pointDif = GameManager.instance.pts1 - GameManager.instance.pts2;
         bool player1 = pointDif < 0;
 
-        if(pointNumberCountingCoroutine != null)
+        if (!resetGame)
         {
-            StopCoroutine(pointNumberCountingCoroutine);
-            pointNumberCountingCoroutine = null;
+            GameEventsManager.instance.visualEvents.OnPointsAddedToDisplay(Color.green);
         }
 
-        pointNumberCountingCoroutine = StartCoroutine(PointNumberCounting(0.1f));
+        yield return StartCoroutine(PointNumberCounting(0.1f));
+        yield return new WaitForSeconds(1);
 
-        /*//Lanza un numerito entre puntuaciones
-        Transform pt = Instantiate(pointTransfer).transform;
-        pt.SetParent(FindObjectOfType<Canvas>().transform);
-        pt.localScale = Vector3.one;
-        pt.position = player1Pt.gameObject.transform.position;
-        pt.GetComponent<Animator>().SetBool("reverse", player1);
-        pt.GetComponent<TMP_Text>().text = $"+{Mathf.Abs(pointDif)}";
-
-        Debug.Log($"Added {Mathf.Abs(pointDif)} points to Player {(player1 ? "1" : "2")}");*/
+        if (!resetGame)
+        {
+            GameManager.instance.AfterPointsUI();
+        }
     }
 
     //Hace la animacion de añadir puntos a los contadores progresivamente

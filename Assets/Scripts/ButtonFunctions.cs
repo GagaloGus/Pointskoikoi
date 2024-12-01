@@ -13,6 +13,11 @@ public class ButtonFunctions : MonoBehaviour
         GameManager.instance.Koi();
     }
 
+    public void ResetGame()
+    {
+        GameManager.instance.ResetGame();
+    }
+
     public void AddPoints()
     {
         GameManager.instance.AddPoints();

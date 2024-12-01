@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class GameHandler : MonoBehaviour
 {
     TMP_Text koiText, roundCountText, player1Pt, player2Pt;
-    GameObject FinishText, meses;
+    GameObject FinishText, meses, roundAnnounceText;
     Button KoiButton, EndRoundButton, AddPointsButton, p1addpt, p2addpt;
 
     private void OnEnable()
@@ -34,7 +34,7 @@ public class GameHandler : MonoBehaviour
 
     private void Awake()
     {
-        Transform PanelCont = FindObjectOfType<Canvas>().transform.Find("Panel Contadores");
+        Transform PanelCont = transform.Find("Panel Contadores");
 
         KoiButton = PanelCont.Find("KoiButton").GetComponent<Button>();
         EndRoundButton = PanelCont.Find("EndRoundButton").GetComponent<Button>();
@@ -43,6 +43,7 @@ public class GameHandler : MonoBehaviour
         p2addpt = PanelCont.Find("AddRightPoints").GetComponent<Button>();
 
         roundCountText = PanelCont.Find("RoundCount").GetComponent<TMP_Text>();
+        roundAnnounceText = transform.Find("Round").gameObject;
         koiText = PanelCont.Find("KoiText").GetComponent<TMP_Text>();
         meses = PanelCont.Find("Month").gameObject;
         FinishText = PanelCont.Find("FINISH").gameObject;
@@ -51,11 +52,21 @@ public class GameHandler : MonoBehaviour
     private void Start()
     {
         GameManager.instance.ResetGame();
+        ShowRoundText(1);
+    }
+
+    void ShowRoundText(int round)
+    {
+        roundAnnounceText.SetActive(true);
+        roundAnnounceText.GetComponentInChildren<TMP_Text>().text = $"Ronda {round}";
+        roundAnnounceText.GetComponent<Animator>().SetTrigger("a");
     }
 
 
     public void ChangeRound(int round)
     {
+        ShowRoundText(round);
+
         int originalPointAmount = GameManager.instance.originalPts,
             offsetPoints = GameManager.instance.offsetPoints;
 
@@ -107,7 +118,7 @@ public class GameHandler : MonoBehaviour
         ChangeMonthCards();
     }
 
-    public void Koi()
+    void Koi()
     {
         Color[] koiColors = GameManager.instance.koiColors;
 
@@ -115,7 +126,7 @@ public class GameHandler : MonoBehaviour
 
         koiText.color = koiColors[index];
 
-        koiText.text = $"<size=60>koi count</size>\r\nx{GameManager.instance.koi}";
+        koiText.text = $"<size=60>koi count</size>\nx{GameManager.instance.koi}";
     }
 
     public void EnableButtons(bool enable)

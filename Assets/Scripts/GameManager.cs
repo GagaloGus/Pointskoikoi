@@ -52,13 +52,15 @@ public class GameManager : MonoBehaviour
 
     public void AddPoints()
     {
+        if(pointsToAdd != 0)
+        {
+            pts1 -= pointsToAdd;
+            pts2 += pointsToAdd;
+            offsetPoints += pointsToAdd;
+
+            GameEventsManager.instance.gameEvents.OnPointsAdded();
+        }
         //Si pointsToAdd es negativo -> gana player1 (izquierda)
-
-        pts1 -= pointsToAdd;
-        pts2 += pointsToAdd;
-        offsetPoints += pointsToAdd;
-
-        GameEventsManager.instance.gameEvents.OnPointsAdded();
     }
 
     public void AfterPointsUI()
@@ -128,160 +130,4 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(sceneName);
     }
-
-
-    /*private void Awake()
-    {
-        Transform PanelCont = FindObjectOfType<Canvas>().transform.Find("Panel Contadores");
-
-        FinishText = PanelCont.Find("FINISH").gameObject;
-        meses = PanelCont.Find("Month").gameObject;
-        leftPointText = PanelCont.Find("LeftPointsDisplay").GetComponentInChildren<TMP_Text>();
-        rightPointText = PanelCont.Find("RightPointsDisplay").GetComponentInChildren<TMP_Text>();
-        koiText = PanelCont.Find("KoiText").GetComponent<TMP_Text>();
-        roundCountText = PanelCont.Find("RoundCount").GetComponent<TMP_Text>();
-        KoiButton = PanelCont.Find("KoiButton").GetComponent<Button>();
-        EndRoundButton = PanelCont.Find("EndRoundButton").GetComponent<Button>();
-
-        KoiButton.onClick.RemoveAllListeners();
-        KoiButton.onClick.AddListener(() => { Koi(); });
-
-        leftPointText.text = originalPointAmount.ToString();
-        rightPointText.text = originalPointAmount.ToString();
-        ResetSetup();
-    }
-
-    private void Start()
-    {
-
-        if (PlayerPrefs.HasKey(ROUNDTEXT_KEY)) { roundCountText.text = PlayerPrefs.GetString(ROUNDTEXT_KEY); }
-        if (PlayerPrefs.HasKey(OFFSETPOINTS_KEY))
-        {
-            SetPoints(offsetPoints+PlayerPrefs.GetInt(OFFSETPOINTS_KEY));
-        }
-        if (PlayerPrefs.HasKey(ROUNDCOUNT_KEY))
-        {
-            roundCount = PlayerPrefs.GetInt(ROUNDCOUNT_KEY);
-            ChangeMonthCards();
-        }
-
-    }
-
-
-
-    public void SetPoints(int pointDif)
-    {
-        offsetPoints += pointDif;
-
-        //offpoints = og negativo = gana Left
-        StopAllCoroutines();
-        StartCoroutine(PointNumberCounting(0.1f));
-
-        Transform pt = Instantiate(pointTransfer).transform;
-        pt.SetParent(FindObjectOfType<Canvas>().transform);
-        pt.localScale = Vector3.one;
-        pt.position = leftPointText.gameObject.transform.position;
-        pt.GetComponent<Animator>().SetBool("reverse", pointDif < 0);
-        pt.GetComponent<TMP_Text>().text = $"+{Mathf.Abs(pointDif)}";
-
-        Debug.Log($"Added {Mathf.Abs(pointDif)} points to Player {(pointDif < 0 ? "1" : "2")}");
-
-        if (offsetPoints <= -originalPointAmount || offsetPoints >= originalPointAmount)
-        {
-            Win();
-        }
-    }
-
-    public void NextRound()
-    {
-        string color1 = "white", color2 = "white";
-
-        if (offsetPoints < 0) { color1 = "green"; color2 = "red"; }
-        else if (offsetPoints > 0) { color1 = "red"; color2 = "green"; }
-
-        roundCountText.text += $"<b>Ronda {roundCount}</b>\r\n<color={color1}>{originalPointAmount - offsetPoints}</color> / <color={color2}>{originalPointAmount + offsetPoints}</color>\r\n\r\n";
-
-        roundCount++;
-
-        if (roundCount > maxRounds)
-        {
-            Win();
-        }
-        else
-        {
-            ResetSetup();
-        }
-
-    }
-
-    void Win()
-    {
-        FinishText.SetActive(true);
-        EnableButtons(false);
-        EndRoundButton.enabled = false;
-
-        if (offsetPoints < 0)
-        {
-            FinishText.transform.Find("1").gameObject.SetActive(true);
-        }
-        else if (offsetPoints > 0)
-        {
-            FinishText.transform.Find("2").gameObject.SetActive(true);
-        }
-        else
-        {
-            FinishText.transform.Find("E").gameObject.SetActive(true);
-        }
-    }
-
-
-
-    void ResetSetup()
-    {
-        EnableButtons(true);
-
-        FinishText.SetActive(false);
-        FinishText.transform.Find("1").gameObject.SetActive(false);
-        FinishText.transform.Find("2").gameObject.SetActive(false);
-        FinishText.transform.Find("E").gameObject.SetActive(false);
-
-        koiCounter = 1;
-        koiText.color = Color.white;
-        koiText.text = $"<size=60>koi count</size>\r\nx{koiCounter}";
-
-        ChangeMonthCards();
-    }
-
-    void ChangeMonthCards()
-    {
-        int month = roundCount - 1;
-
-        List<Sprite> CardSprites = FindObjectOfType<DisplayCombinations>(true).CardSprites;
-
-        month = Mathf.Clamp(month, 0, 11);
-        meses.transform.Find("Mes").GetComponent<TMP_Text>().text = MONTHS[month];
-
-        for (int i = 0; i < 4; i++)
-        {
-            meses.transform.Find($"Card-{i}").GetComponent<Image>().sprite = CardSprites[i + (month * 4)];
-        }
-    }
-
-    void EnableButtons(bool enable)
-    {
-        KoiButton.enabled = enable;
-    }
-
-    public void Koi()
-    {
-        int index = koiCounter % koiIncreaseColors.Length;
-
-        koiCounter++;
-        koiText.color = koiIncreaseColors[index];
-
-        koiText.text = $"<size=60>koi count</size>\r\nx{koiCounter}";
-    }
-
-    
-*/
 }

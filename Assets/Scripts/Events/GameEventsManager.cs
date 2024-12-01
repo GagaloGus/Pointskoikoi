@@ -7,6 +7,7 @@ public class GameEventsManager : MonoBehaviour
     public static GameEventsManager instance;
 
     public GameEvents gameEvents;
+    public VisualEvents visualEvents;
 
     private void Awake()
     {
@@ -22,5 +23,6 @@ public class GameEventsManager : MonoBehaviour
         instance = this;
 
         gameEvents = new GameEvents();
+        visualEvents = new VisualEvents();
     }
 }
