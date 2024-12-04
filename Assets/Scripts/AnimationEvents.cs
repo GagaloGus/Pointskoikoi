@@ -19,4 +19,9 @@ public class AnimationEvents : MonoBehaviour
         FindObjectOfType<PointHandler>().UpdateUIPoints();
         gameObject.SetActive(false);
     }
+
+    public void KoiTextMoved()
+    {
+        FindObjectOfType<PointHandler>().IncreasePointsToAdd();
+    }
 }

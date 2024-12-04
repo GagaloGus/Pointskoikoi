@@ -9,7 +9,7 @@ public class PointHandler : MonoBehaviour
     [Header("References")]
     public GameObject pointTransfer, PointPanel;
 
-    TMP_Text player1Pt, player2Pt, koiText, player1ptAdd, player2ptAdd;
+    TMP_Text player1Pt, player2Pt, player1ptAdd, player2ptAdd;
     public int finalPoints;
 
     Button p1addpt, p2addpt;
@@ -57,14 +57,53 @@ public class PointHandler : MonoBehaviour
     {
         player1ptAdd.gameObject.SetActive(false);
         player2ptAdd.gameObject.SetActive(false);
-        PointPanel.gameObject.SetActive(false);
+        PointPanel.SetActive(false);
     }
 
     void AddPoints()
     {
         resetGame = false;
-        (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd).
-            GetComponent<Animator>().SetTrigger("add");
+        Animator t = (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd).GetComponent<Animator>();
+
+        t.SetBool("koi", GameManager.instance.koi > 1);
+        t.SetTrigger("add");
+
+        //Mueve el textokoi
+        if(GameManager.instance.koi > 1)
+        {
+            gameHandler.KoiTextMove();
+        }
+    }
+
+    //Llamado por el evento de animacion del koitext
+    public void IncreasePointsToAdd()
+    {
+        StartCoroutine(IncreasePointsToAdd_Corr());
+    }
+
+    IEnumerator IncreasePointsToAdd_Corr()
+    {
+        TMP_Text t = (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd);
+        t.GetComponent<Animator>().SetTrigger("koiadded");
+
+
+
+        int originalpt = Mathf.Abs(GameManager.instance.pointsToAdd),
+            finalpt = Mathf.Abs(GameManager.instance.pointsToAdd * GameManager.instance.koi);
+
+        print(originalpt +" / " + finalpt);
+
+        GameManager.instance.pointsToAdd *= GameManager.instance.koi;
+        float speedRed = Mathf.Abs(finalpt - originalpt)/5;
+
+        while (originalpt != finalpt) 
+        {
+            originalpt++;
+
+            t.text = $"+{originalpt}";
+
+            yield return new WaitForSeconds(0.1f/speedRed);
+        }
     }
 
     void ResetGame()
@@ -81,6 +120,7 @@ public class PointHandler : MonoBehaviour
         pairsP2 = new List<CombiPointsPair>();
         player1ptAdd.gameObject.SetActive(false);
         player2ptAdd.gameObject.SetActive(false);
+        finalPoints = 0;
     }
 
     public void ActivatePointPanel(bool player1)
@@ -107,7 +147,8 @@ public class PointHandler : MonoBehaviour
     {
         gameHandler.EnableButtons(true);
         GameManager.instance.p1LastChoose = GameManager.instance.p1Choose;
-        GameManager.instance.pointsToAdd = pts * (GameManager.instance.p1Choose ? -1 : 1); ;
+        GameManager.instance.pointsToAdd = pts * (GameManager.instance.p1Choose ? -1 : 1);
+        finalPoints = pts;
         print($"Holdear puntos {pairs.Count}");
 
         if (GameManager.instance.p1Choose)
@@ -153,7 +194,7 @@ public class PointHandler : MonoBehaviour
             GameEventsManager.instance.visualEvents.OnPointsAddedToDisplay(Color.green);
         }
 
-        yield return StartCoroutine(PointNumberCounting(0.1f));
+        yield return StartCoroutine(PointNumberCounting());
         yield return new WaitForSeconds(1);
 
         if (!resetGame)
@@ -163,7 +204,7 @@ public class PointHandler : MonoBehaviour
     }
 
     //Hace la animacion de añadir puntos a los contadores progresivamente
-    IEnumerator PointNumberCounting(float speed)
+    IEnumerator PointNumberCounting()
     {
         int originalPointAmount = GameManager.instance.originalPts,
             offsetPoints = GameManager.instance.offsetPoints;
@@ -211,7 +252,7 @@ public class PointHandler : MonoBehaviour
 
             }
 
-            yield return new WaitForSeconds(speed * speedRed);
+            yield return new WaitForSeconds(0.1f * speedRed);
         }
 
         print("Se termino la corrutina");

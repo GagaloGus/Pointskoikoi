@@ -32,7 +32,6 @@ public class CombiChosePanel : MonoBehaviour
 
     public void ActivateChoices(List<CombiPointsPair> pairs)
     {
-        print(pairs.Count);
         foreach(Transform t in Content)
         {
             Combination c = t.GetComponent<Combination>();

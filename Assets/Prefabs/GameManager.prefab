@@ -51,7 +51,7 @@ MonoBehaviour:
   originalPts: 30
   round: 0
   maxRounds: 12
-  koi: 0
+  koi: 5
   p1Choose: 0
   p1LastChoose: 0
   gameMode: 0

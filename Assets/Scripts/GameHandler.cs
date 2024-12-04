@@ -8,9 +8,11 @@ using UnityEngine.UI;
 //Lleva el contador de las rondas y el koi
 public class GameHandler : MonoBehaviour
 {
-    TMP_Text koiText, roundCountText, player1Pt, player2Pt;
+    TMP_Text koiText, roundCountText;
     GameObject FinishText, meses, roundAnnounceText;
     Button KoiButton, EndRoundButton, AddPointsButton, p1addpt, p2addpt;
+
+    Animator koiText_anim;
 
     private void OnEnable()
     {
@@ -47,6 +49,8 @@ public class GameHandler : MonoBehaviour
         koiText = PanelCont.Find("KoiText").GetComponent<TMP_Text>();
         meses = PanelCont.Find("Month").gameObject;
         FinishText = PanelCont.Find("FINISH").gameObject;
+
+        koiText_anim = koiText.GetComponent<Animator>();
     }
 
     private void Start()
@@ -55,13 +59,20 @@ public class GameHandler : MonoBehaviour
         ShowRoundText(1);
     }
 
+    public void KoiTextMove()
+    {
+        koiText_anim.SetBool("left", GameManager.instance.p1Choose);
+        koiText_anim.SetTrigger("addkoi");
+
+        //Evento de animacion que lanza IncreasePointsToAdd en pointhandler
+    }
+
     void ShowRoundText(int round)
     {
         roundAnnounceText.SetActive(true);
         roundAnnounceText.GetComponentInChildren<TMP_Text>().text = $"Ronda {round}";
         roundAnnounceText.GetComponent<Animator>().SetTrigger("a");
     }
-
 
     public void ChangeRound(int round)
     {
@@ -113,7 +124,8 @@ public class GameHandler : MonoBehaviour
         EnableButtons(true);
 
         koiText.color = Color.white;
-        koiText.text = $"<size=60>koi count</size>\nx1";
+        koiText.text = $"<size=80>koi</size>\nx1";
+        koiText_anim.SetTrigger("reset");
 
         ChangeMonthCards();
     }
@@ -126,7 +138,7 @@ public class GameHandler : MonoBehaviour
 
         koiText.color = koiColors[index];
 
-        koiText.text = $"<size=60>koi count</size>\nx{GameManager.instance.koi}";
+        koiText.text = $"<size=80>koi</size>\nx{GameManager.instance.koi}";
     }
 
     public void EnableButtons(bool enable)

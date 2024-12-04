@@ -1222,7 +1222,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Round 1
+  m_text: 'Ronda 1
 
     <color=green>60</color> / <color=red>20</color>'
   m_isRightToLeft: 0
@@ -4736,6 +4736,8 @@ GameObject:
   - component: {fileID: 981620880}
   - component: {fileID: 981620882}
   - component: {fileID: 981620881}
+  - component: {fileID: 981620883}
+  - component: {fileID: 981620884}
   m_Layer: 5
   m_Name: KoiText
   m_TagString: Untagged
@@ -4782,7 +4784,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<size=60>koi count</size>
+  m_text: '<size=80>koi</size>
 
     x3'
   m_isRightToLeft: 0
@@ -4861,6 +4863,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 981620879}
   m_CullTransparentMesh: 1
+--- !u!95 &981620883
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981620879}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 051eaedd98e9f4a4bae716dc21ff5d80, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &981620884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981620879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e7c9d50cb81de64f8e8c5ceb9f329ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000538373
 GameObject:
   m_ObjectHideFlags: 0
@@ -5067,8 +5102,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -486, y: -533.34}
-  m_SizeDelta: {x: 406.87, y: 214}
+  m_AnchoredPosition: {x: -508.98, y: -533.34}
+  m_SizeDelta: {x: 439.81, y: 214}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1027285957
 MonoBehaviour:
@@ -7412,13 +7447,13 @@ RectTransform:
   - {fileID: 1719699501}
   - {fileID: 1707577976}
   - {fileID: 1231263677}
-  - {fileID: 1877775039}
   - {fileID: 1027285956}
+  - {fileID: 1877775039}
   - {fileID: 1774793535}
-  - {fileID: 981620880}
   - {fileID: 292552880}
   - {fileID: 1180328948}
   - {fileID: 2030282118}
+  - {fileID: 981620880}
   - {fileID: 1664561412}
   m_Father: {fileID: 1662639243}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7522,7 +7557,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: add points
+  m_text: "a\xF1adir\npuntos"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
@@ -8472,7 +8507,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointTransfer: {fileID: 0}
   PointPanel: {fileID: 0}
-  finalPoints: 0
   pairsP1: []
   pairsP2: []
 --- !u!114 &1662639248
@@ -8825,6 +8859,18 @@ PrefabInstance:
     - target: {fileID: 2425524731316136644, guid: 3b70446905560b14a81699797b7dae39, type: 3}
       propertyPath: m_Name
       value: Card-0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2791064798529105356, guid: 3b70446905560b14a81699797b7dae39, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2791064798529105356, guid: 3b70446905560b14a81699797b7dae39, type: 3}
+      propertyPath: m_UseSpriteMesh
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2791064798529105356, guid: 3b70446905560b14a81699797b7dae39, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6172923678040572484, guid: 3b70446905560b14a81699797b7dae39, type: 3}
       propertyPath: m_Pivot.x
@@ -9188,8 +9234,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 486, y: -533.34}
-  m_SizeDelta: {x: 406.87, y: 214}
+  m_AnchoredPosition: {x: 508.64, y: -533.34}
+  m_SizeDelta: {x: 452.16, y: 214}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1774793536
 MonoBehaviour:
@@ -10130,7 +10176,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: End ROund
+  m_text: 'terminar
+
+    ronda'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}

@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
         }
         instance = this;
 
+        koi = 1;
         offsetPoints = 0;
         pts1 = pts2 = offsetPoints;
         p1LastChoose = true;
@@ -52,6 +53,8 @@ public class GameManager : MonoBehaviour
 
     public void AddPoints()
     {
+        pointsToAdd*=koi;
+
         if(pointsToAdd != 0)
         {
             pts1 -= pointsToAdd;
@@ -92,6 +95,8 @@ public class GameManager : MonoBehaviour
 
     public void ResetSetup()
     {
+        koi = 1;
+        pointsToAdd = 0;
         GameEventsManager.instance.gameEvents.ResetSetup();
     }
 
@@ -100,7 +105,6 @@ public class GameManager : MonoBehaviour
         offsetPoints = 0;
         pts1 = pts2 = originalPts;
         round = 1;
-        koi = 1;
         GameEventsManager.instance.gameEvents.ResetGame();
         GameEventsManager.instance.gameEvents.ResetSetup();
     }
