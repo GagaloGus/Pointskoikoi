@@ -93,6 +93,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void StartUpGame()
+    {
+        pts1 = pts2 = originalPts;
+        ResetGame();
+    }
+
     public void ResetSetup()
     {
         koi = 1;
@@ -103,6 +109,8 @@ public class GameManager : MonoBehaviour
     public void ResetGame()
     {
         offsetPoints = 0;
+        koi = 1;
+        pointsToAdd = 0;
         pts1 = pts2 = originalPts;
         round = 1;
         GameEventsManager.instance.gameEvents.ResetGame();

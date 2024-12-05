@@ -58,9 +58,6 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: koi
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
     m_ConditionEvent: koiadded
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
@@ -72,7 +69,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0
   m_TransitionOffset: 0
   m_ExitTime: 1
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -129,6 +126,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: pointsadded
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -153,27 +156,27 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 3331280088315436792}
-    m_Position: {x: 200, y: 0, z: 0}
+    m_Position: {x: 170, y: 10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8537021190780495239}
-    m_Position: {x: 330, y: 60, z: 0}
+    m_Position: {x: 320, y: 90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2373464583714847616}
-    m_Position: {x: 450, y: 140, z: 0}
+    m_Position: {x: 580, y: 150, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5850768029733158842}
-    m_Position: {x: 730, y: 140, z: 0}
+    m_Position: {x: 750, y: 40, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4463232878050262596}
-    m_Position: {x: 610, y: 0, z: 0}
+    m_Position: {x: 570, y: -80, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -2752550703674959244}
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: 360, y: -110, z: 0}
-  m_EntryPosition: {x: 50, y: 120, z: 0}
+  m_AnyStatePosition: {x: 260, y: -90, z: 0}
+  m_EntryPosition: {x: 50, y: -70, z: 0}
   m_ExitPosition: {x: 840, y: -50, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 3331280088315436792}
@@ -316,7 +319,10 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions: []
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: pointsadded
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5850768029733158842}
   m_Solo: 0
@@ -326,7 +332,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0
   m_TransitionOffset: 0
   m_ExitTime: 1
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
