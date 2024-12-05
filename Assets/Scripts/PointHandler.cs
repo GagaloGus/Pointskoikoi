@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class PointHandler : MonoBehaviour
 {
+    Transform PanelJuego;
+
     [Header("References")]
     public GameObject pointTransfer, PointPanel;
 
@@ -38,7 +40,8 @@ public class PointHandler : MonoBehaviour
 
     private void Awake()
     {
-        Transform PanelCont = transform.Find("Panel Contadores");
+        PanelJuego = GameObject.FindGameObjectWithTag("PanelJuego").transform;
+        Transform PanelCont = GameObject.FindGameObjectWithTag("PanelPrincipal").transform;
         Transform p1 = PanelCont.Find("LeftPointsDisplay"), p2 = PanelCont.Find("RightPointsDisplay");
 
         PointPanel = FindObjectOfType<CombiChosePanel>(true).gameObject;
@@ -55,6 +58,8 @@ public class PointHandler : MonoBehaviour
 
     void Start()
     {
+        player1Pt.text = GameManager.instance.originalPts.ToString();
+        player2Pt.text = GameManager.instance.originalPts.ToString();
         player1ptAdd.gameObject.SetActive(false);
         player2ptAdd.gameObject.SetActive(false);
         PointPanel.SetActive(false);
@@ -66,17 +71,21 @@ public class PointHandler : MonoBehaviour
         Animator t = (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd).GetComponent<Animator>();
 
         t.SetBool("koi", GameManager.instance.koi > 1);
-        t.SetTrigger("add");
 
         //Mueve el textokoi
         if(GameManager.instance.koi > 1)
         {
-            gameHandler.KoiTextMove();
+            PanelJuego.GetComponent<Animator>().SetTrigger("zoomkoi");
+            FindObjectOfType<KoiText>().Tingle();
+        }
+        else
+        {
+            t.SetTrigger("add");
         }
     }
 
     //Llamado por el evento de animacion del koitext
-    public void IncreasePointsToAdd()
+    public void KoiText_IncreasePts()
     {
         StartCoroutine(IncreasePointsToAdd_Corr());
     }
@@ -84,32 +93,28 @@ public class PointHandler : MonoBehaviour
     IEnumerator IncreasePointsToAdd_Corr()
     {
         TMP_Text t = (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd);
-        t.GetComponent<Animator>().SetTrigger("koiadded");
 
+        int originalpt = Mathf.Abs(GameManager.instance.pointsToAdd/GameManager.instance.koi),
+            finalpt = Mathf.Abs(GameManager.instance.pointsToAdd);
 
-
-        int originalpt = Mathf.Abs(GameManager.instance.pointsToAdd),
-            finalpt = Mathf.Abs(GameManager.instance.pointsToAdd * GameManager.instance.koi);
-
-        print(originalpt +" / " + finalpt);
-
-        GameManager.instance.pointsToAdd *= GameManager.instance.koi;
-        float speedRed = Mathf.Abs(finalpt - originalpt)/5;
+        float speedRed = Mathf.Abs(finalpt - originalpt)/3;
 
         while (originalpt != finalpt) 
         {
             originalpt++;
+            t.GetComponent<Animator>().SetTrigger("koiadded");
 
             t.text = $"+{originalpt}";
 
-            yield return new WaitForSeconds(0.1f/speedRed);
+            yield return new WaitForSeconds(0.2f/speedRed);
         }
+
+        yield return new WaitForSeconds(0.5f);
+        t.GetComponent<Animator>().SetTrigger("pointsadded");
     }
 
     void ResetGame()
     {
-        player1Pt.text = GameManager.instance.originalPts.ToString();
-        player2Pt.text = GameManager.instance.originalPts.ToString();
         resetGame = true;
         UpdateUIPoints();
     }
@@ -132,8 +137,6 @@ public class PointHandler : MonoBehaviour
 
         List<CombiPointsPair> p = (player1 ? pairsP1 : pairsP2);
         PointPanel.GetComponent<CombiChosePanel>().ActivateChoices(p);
-
-        print("Activao");
     }
 
     public void CancelHoldPoints()
@@ -149,7 +152,6 @@ public class PointHandler : MonoBehaviour
         GameManager.instance.p1LastChoose = GameManager.instance.p1Choose;
         GameManager.instance.pointsToAdd = pts * (GameManager.instance.p1Choose ? -1 : 1);
         finalPoints = pts;
-        print($"Holdear puntos {pairs.Count}");
 
         if (GameManager.instance.p1Choose)
         {
@@ -217,10 +219,9 @@ public class PointHandler : MonoBehaviour
             L_oldNum = int.Parse(player1Pt.text), 
             R_oldNum = int.Parse(player2Pt.text);
 
-        float speedRed = Mathf.Abs(L_newNum - L_oldNum);
+        float speedRed = Mathf.Abs(L_newNum - L_oldNum)/3;
 
         if (speedRed <= 0) { speedRed = 1; }
-        speedRed = 1 / (Mathf.Log(speedRed, 8));
 
         while (L_oldNum != L_newNum)
         {
@@ -236,25 +237,23 @@ public class PointHandler : MonoBehaviour
             player1Pt.text = L_oldNum.ToString();
             player2Pt.text = R_oldNum.ToString();
 
-            if (int.Parse(player1Pt.text) > originalPointAmount * 2) { player1Pt.text = (originalPointAmount * 2).ToString(); }
-            else if (int.Parse(player1Pt.text) < 0) { player1Pt.text = 0.ToString(); }
-            else
-            {
-                L_anim.SetTrigger("bounce");
+            L_anim.SetTrigger("bounce");
+            R_anim.SetTrigger("bounce");
 
+            if(int.Parse(player1Pt.text) > originalPointAmount * 2)
+            {
+                player1Pt.text = (originalPointAmount * 2).ToString();
+                player2Pt.text = 0.ToString();
+                break;
+            }
+            else if(int.Parse(player1Pt.text) < 0)
+            {
+                player1Pt.text = 0.ToString();
+                player2Pt.text = (originalPointAmount * 2).ToString();
+                break;
             }
 
-            if (int.Parse(player2Pt.text) > originalPointAmount * 2) { player2Pt.text = (originalPointAmount * 2).ToString(); }
-            else if (int.Parse(player2Pt.text) < 0) { player2Pt.text = 0.ToString(); }
-            else
-            {
-                R_anim.SetTrigger("bounce");
-
-            }
-
-            yield return new WaitForSeconds(0.1f * speedRed);
+            yield return new WaitForSeconds(0.3f/speedRed);
         }
-
-        print("Se termino la corrutina");
     }
 }
