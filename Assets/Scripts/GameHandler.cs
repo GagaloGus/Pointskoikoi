@@ -8,6 +8,8 @@ using UnityEngine.UI;
 //Lleva el contador de las rondas, los botones
 public class GameHandler : MonoBehaviour
 {
+    Transform PanelJuego;
+
     TMP_Text roundCountText;
     GameObject FinishText, meses, roundAnnounceText;
     Button KoiButton, EndRoundButton, AddPointsButton, p1addpt, p2addpt;
@@ -29,10 +31,13 @@ public class GameHandler : MonoBehaviour
         GameEventsManager.instance.gameEvents.resetGame -= ResetGame;
         GameEventsManager.instance.gameEvents.onPointsAdded -= AddPoints;
     }
-
+    
     private void Awake()
     {
-        Transform PanelCont = transform.Find("Panel Contadores");
+        PanelJuego = GameObject.FindGameObjectWithTag("PanelJuego").transform;
+        Transform PanelCont = GameObject.FindGameObjectWithTag("PanelPrincipal").transform;
+
+        roundAnnounceText = PanelCont.parent.Find("Round").gameObject;
 
         KoiButton = PanelCont.Find("KoiButton").GetComponent<Button>();
         EndRoundButton = PanelCont.Find("EndRoundButton").GetComponent<Button>();
@@ -41,7 +46,6 @@ public class GameHandler : MonoBehaviour
         p2addpt = PanelCont.Find("AddRightPoints").GetComponent<Button>();
 
         roundCountText = PanelCont.Find("RoundCount").GetComponent<TMP_Text>();
-        roundAnnounceText = transform.Find("Round").gameObject;
         meses = PanelCont.Find("Month").gameObject;
         FinishText = PanelCont.Find("FINISH").gameObject;
     }

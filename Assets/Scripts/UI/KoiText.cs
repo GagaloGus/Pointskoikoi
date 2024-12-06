@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class KoiText : MonoBehaviour
 {
@@ -35,7 +34,7 @@ public class KoiText : MonoBehaviour
 
     private void Start()
     {
-        koiColors = GameManager.instance.koiColors; ;
+        koiColors = GameManager.instance.koiColors;
     }
 
     void ResetGame()
@@ -48,8 +47,6 @@ public class KoiText : MonoBehaviour
         text.color = Color.white;
         text.text = $"<size=80>koi</size>\nx1";
         animator.SetTrigger("reset");
-        SetMaterialGlowValues(0);
-        print("res");
     }
 
     void Koi()
@@ -63,31 +60,6 @@ public class KoiText : MonoBehaviour
     public void Tingle()
     {
         animator.SetTrigger("addkoi");
-        //StartCoroutine(Brillo_Corr());
-    }
-
-    IEnumerator Brillo_Corr()
-    {
-        float val = 0.1f;
-        while(val < 0.5)
-        {
-            val += 0.04f;
-            SetMaterialGlowValues(val);
-            yield return new WaitForSeconds(0.01f);
-        }
-
-        while (val > 0)
-        {
-            val -= 0.02f;
-            SetMaterialGlowValues(val);
-            yield return new WaitForSeconds(0.01f);
-        }
-    }
-
-    void SetMaterialGlowValues(float val)
-    {
-        text.fontSharedMaterial.SetFloat("_Softness", val/1.5f);
-        text.fontSharedMaterial.SetFloat("_FaceDilate", val);
     }
 
     public void SendEndTingleMessage()

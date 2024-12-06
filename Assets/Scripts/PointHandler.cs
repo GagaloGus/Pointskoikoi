@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class PointHandler : MonoBehaviour
 {
+    Transform PanelJuego;
+
     [Header("References")]
     public GameObject pointTransfer, PointPanel;
 
@@ -38,7 +40,8 @@ public class PointHandler : MonoBehaviour
 
     private void Awake()
     {
-        Transform PanelCont = transform.Find("Panel Contadores");
+        PanelJuego = GameObject.FindGameObjectWithTag("PanelJuego").transform;
+        Transform PanelCont = GameObject.FindGameObjectWithTag("PanelPrincipal").transform;
         Transform p1 = PanelCont.Find("LeftPointsDisplay"), p2 = PanelCont.Find("RightPointsDisplay");
 
         PointPanel = FindObjectOfType<CombiChosePanel>(true).gameObject;
@@ -72,6 +75,7 @@ public class PointHandler : MonoBehaviour
         //Mueve el textokoi
         if(GameManager.instance.koi > 1)
         {
+            PanelJuego.GetComponent<Animator>().SetTrigger("zoomkoi");
             FindObjectOfType<KoiText>().Tingle();
         }
         else
@@ -94,7 +98,6 @@ public class PointHandler : MonoBehaviour
             finalpt = Mathf.Abs(GameManager.instance.pointsToAdd);
 
         float speedRed = Mathf.Abs(finalpt - originalpt)/3;
-        print(originalpt +" / " + finalpt + " / "+speedRed);
 
         while (originalpt != finalpt) 
         {
@@ -134,8 +137,6 @@ public class PointHandler : MonoBehaviour
 
         List<CombiPointsPair> p = (player1 ? pairsP1 : pairsP2);
         PointPanel.GetComponent<CombiChosePanel>().ActivateChoices(p);
-
-        print("Activao");
     }
 
     public void CancelHoldPoints()
@@ -204,7 +205,7 @@ public class PointHandler : MonoBehaviour
         }
     }
 
-    //Hace la animacion de añadir puntos a los contadores progresivamente
+    //Hace la animacion de aï¿½adir puntos a los contadores progresivamente
     IEnumerator PointNumberCounting()
     {
         int originalPointAmount = GameManager.instance.originalPts,
@@ -252,7 +253,7 @@ public class PointHandler : MonoBehaviour
                 break;
             }
 
-            yield return new WaitForSeconds(0.4f/speedRed);
+            yield return new WaitForSeconds(0.3f/speedRed);
         }
     }
 }
