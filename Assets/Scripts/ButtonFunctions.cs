@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine; 
 public class ButtonFunctions : MonoBehaviour
 {
-    public void NextRound()
+    public void EndRound()
     {
-        GameManager.instance.NextRound();
+        GameManager.instance.EndRound();
     }
 
     public void Koi()

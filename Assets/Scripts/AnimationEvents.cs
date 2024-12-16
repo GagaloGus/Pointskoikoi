@@ -20,5 +20,9 @@ public class AnimationEvents : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    
+    //Llamado por el texto de roundend cuando acaba su animacion
+    public void ContinueRound()
+    {
+        GameManager.instance.NextRound();
+    }
 }

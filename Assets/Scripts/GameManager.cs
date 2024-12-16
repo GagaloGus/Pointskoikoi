@@ -78,6 +78,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void EndRound()
+    {
+        GameEventsManager.instance.gameEvents.OnRoundEnd();
+    }
+
     public void NextRound()
     {
         round++;

@@ -8,16 +8,14 @@ using UnityEngine.UI;
 //Lleva el contador de las rondas, los botones
 public class GameHandler : MonoBehaviour
 {
-    Transform PanelJuego;
-
-    TMP_Text roundCountText;
-    GameObject FinishText, meses, roundAnnounceText;
+    GameObject FinishText, meses, roundAnnounceText, roundEndText;
     Button KoiButton, EndRoundButton, AddPointsButton, p1addpt, p2addpt;
 
     private void OnEnable()
     {
         GameEventsManager.instance.gameEvents.onWin += Win;
         GameEventsManager.instance.gameEvents.onRoundChange += ChangeRound;
+        GameEventsManager.instance.gameEvents.onRoundEnd += EndRound;
         GameEventsManager.instance.gameEvents.resetSetup += ResetSetup;
         GameEventsManager.instance.gameEvents.resetGame += ResetGame;
         GameEventsManager.instance.gameEvents.onPointsAdded += AddPoints;
@@ -27,6 +25,7 @@ public class GameHandler : MonoBehaviour
     {
         GameEventsManager.instance.gameEvents.onWin -= Win;
         GameEventsManager.instance.gameEvents.onRoundChange -= ChangeRound;
+        GameEventsManager.instance.gameEvents.onRoundEnd -= EndRound;
         GameEventsManager.instance.gameEvents.resetSetup -= ResetSetup;
         GameEventsManager.instance.gameEvents.resetGame -= ResetGame;
         GameEventsManager.instance.gameEvents.onPointsAdded -= AddPoints;
@@ -34,10 +33,10 @@ public class GameHandler : MonoBehaviour
     
     private void Awake()
     {
-        PanelJuego = GameObject.FindGameObjectWithTag("PanelJuego").transform;
         Transform PanelCont = GameObject.FindGameObjectWithTag("PanelPrincipal").transform;
 
         roundAnnounceText = PanelCont.parent.Find("Round").gameObject;
+        roundEndText = PanelCont.parent.Find("RoundEnd").gameObject;
 
         KoiButton = PanelCont.Find("KoiButton").GetComponent<Button>();
         EndRoundButton = PanelCont.Find("EndRoundButton").GetComponent<Button>();
@@ -45,9 +44,11 @@ public class GameHandler : MonoBehaviour
         p1addpt = PanelCont.Find("AddLeftPoints").GetComponent<Button>();
         p2addpt = PanelCont.Find("AddRightPoints").GetComponent<Button>();
 
-        roundCountText = PanelCont.Find("RoundCount").GetComponent<TMP_Text>();
         meses = PanelCont.Find("Month").gameObject;
         FinishText = PanelCont.Find("FINISH").gameObject;
+
+        roundAnnounceText.SetActive(false);
+        roundEndText.SetActive(false);
     }
 
     private void Start()
@@ -63,19 +64,15 @@ public class GameHandler : MonoBehaviour
         roundAnnounceText.GetComponent<Animator>().SetTrigger("a");
     }
 
+    public void EndRound()
+    {
+        roundEndText.SetActive(true);
+        EnableButtons(false);
+    }
+
     public void ChangeRound(int round)
     {
         ShowRoundText(round);
-
-        int originalPointAmount = GameManager.instance.originalPts,
-            offsetPoints = GameManager.instance.offsetPoints;
-
-        string color1 = "white", color2 = "white";
-
-        if (offsetPoints < 0) { color1 = "green"; color2 = "red"; }
-        else if (offsetPoints > 0) { color1 = "red"; color2 = "green"; }
-
-        roundCountText.text = $"<b>Ronda {round}</b>\n<color={color1}>{originalPointAmount - offsetPoints}</color> / <color={color2}>{originalPointAmount + offsetPoints}</color>\n\n";
     }
 
     void ChangeMonthCards()
@@ -104,8 +101,6 @@ public class GameHandler : MonoBehaviour
         FinishText.transform.Find("1").gameObject.SetActive(false);
         FinishText.transform.Find("2").gameObject.SetActive(false);
         FinishText.transform.Find("E").gameObject.SetActive(false);
-
-        roundCountText.text = $"<b>Ronda 1</b>\n";
     }
 
     void ResetSetup()
@@ -117,11 +112,11 @@ public class GameHandler : MonoBehaviour
 
     public void EnableButtons(bool enable)
     {
-        KoiButton.enabled = enable;
-        EndRoundButton.enabled = enable;
-        AddPointsButton.enabled = enable;
-        p1addpt.enabled = enable;
-        p2addpt.enabled = enable;
+        KoiButton.interactable = enable;
+        EndRoundButton.interactable = enable;
+        AddPointsButton.interactable = enable;
+        p1addpt.interactable = enable;
+        p2addpt.interactable = enable;
     }
 
     void Win(Win_States win)

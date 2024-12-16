@@ -58,4 +58,13 @@ public class GameEvents
             onRoundChange(round);
         }
     }
+
+    public event Action onRoundEnd;
+    public void OnRoundEnd()
+    {
+        if (onRoundEnd != null)
+        {
+            onRoundEnd();
+        }
+    }
 }
