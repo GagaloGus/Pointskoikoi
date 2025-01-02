@@ -8,7 +8,7 @@ using UnityEngine.UI;
 //Lleva el contador de las rondas, los botones
 public class GameHandler : MonoBehaviour
 {
-    GameObject FinishText, meses, roundAnnounceText, roundEndText;
+    GameObject roundAnnounceText, roundEndText, finalScore;
     Button KoiButton, EndRoundButton, AddPointsButton, p1addpt, p2addpt;
 
     private void OnEnable()
@@ -44,11 +44,11 @@ public class GameHandler : MonoBehaviour
         p1addpt = PanelCont.Find("AddLeftPoints").GetComponent<Button>();
         p2addpt = PanelCont.Find("AddRightPoints").GetComponent<Button>();
 
-        meses = PanelCont.Find("Month").gameObject;
-        FinishText = PanelCont.Find("FINISH").gameObject;
+        finalScore = FindObjectOfType<FinalScore>(true).gameObject;
 
         roundAnnounceText.SetActive(false);
         roundEndText.SetActive(false);
+        finalScore.SetActive(false);
     }
 
     private void Start()
@@ -75,21 +75,6 @@ public class GameHandler : MonoBehaviour
         ShowRoundText(round);
     }
 
-    void ChangeMonthCards()
-    {
-        int month = GameManager.instance.round - 1;
-
-        List<Sprite> CardSprites = GameManager.instance.CardSprites;
-
-        month = Mathf.Clamp(month, 0, 11);
-        meses.transform.Find("Mes").GetComponent<TMP_Text>().text = GameManager.MONTHS[month];
-
-        for (int i = 0; i < 4; i++)
-        {
-            meses.transform.Find($"Card-{i}").GetComponent<Image>().sprite = CardSprites[i + (month * 4)];
-        }
-    }
-
     void AddPoints()
     {
         EnableButtons(false);
@@ -97,17 +82,12 @@ public class GameHandler : MonoBehaviour
 
     void ResetGame()
     {
-        FinishText.SetActive(false);
-        FinishText.transform.Find("1").gameObject.SetActive(false);
-        FinishText.transform.Find("2").gameObject.SetActive(false);
-        FinishText.transform.Find("E").gameObject.SetActive(false);
+
     }
 
     void ResetSetup()
     {
         EnableButtons(true);
-
-        ChangeMonthCards();
     }
 
     public void EnableButtons(bool enable)
@@ -121,21 +101,9 @@ public class GameHandler : MonoBehaviour
 
     void Win(Win_States win)
     {
-        FinishText.SetActive(true);
-        EndRoundButton.enabled = false;
+        EnableButtons(false);
 
-        switch (win)
-        {
-            case Win_States.Player1:
-                FinishText.transform.Find("1").gameObject.SetActive(true);
-                break;
-            case Win_States.Player2:
-                FinishText.transform.Find("2").gameObject.SetActive(true);
-                break;
-            case Win_States.Tie:
-                FinishText.transform.Find("E").gameObject.SetActive(true);
-                break;
-        }
+        finalScore.SetActive(true );   
     }
 
 }

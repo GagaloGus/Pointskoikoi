@@ -44,17 +44,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06e80ba52df580242904d4e4d1ebaf9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  originalPts: 500
   pts1: 0
   pts2: 0
   offsetPoints: 0
   pointsToAdd: 0
-  originalPts: 30
   round: 0
   maxRounds: 12
   koi: 5
   p1Choose: 0
   p1LastChoose: 0
   gameMode: 0
+  scores: []
   koiColors:
   - {r: 1, g: 0.1273585, b: 0.20995717, a: 1}
   - {r: 1, g: 0.63720036, b: 0.12549019, a: 1}
@@ -110,3 +111,4 @@ MonoBehaviour:
   - {fileID: 21300000, guid: dafb6df0c3d2e2547ac6ead72c0326fc, type: 3}
   - {fileID: 21300000, guid: 302a6117980196a4e80db06f2f88c0f1, type: 3}
   - {fileID: 21300000, guid: 6bbbcad8ddc51e94c9eadbde59a2fed1, type: 3}
+  - {fileID: 21300000, guid: a7511fc4868c654419184c7ad5fb55b3, type: 3}

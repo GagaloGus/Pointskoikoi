@@ -12,12 +12,23 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public int pts1, pts2, offsetPoints, pointsToAdd, originalPts = 30, round, maxRounds, koi;
-    public bool p1Choose, p1LastChoose;
+    [Header("Puntos")]
+    public int originalPts = 30;
+    public int pts1, pts2, offsetPoints, pointsToAdd;
+
+    [Header("Rounds")]
+    public int round;
+    public int maxRounds, koi;
+
+    [Header("Settings")]
+    public bool p1Choose;
+    public bool p1LastChoose;
     public GameMode gameMode;
+    public Win_States Win;
+    public List<Vector2> scores;
 
+    [Header("UI")]
     public Color[] koiColors;
-
     public List<Sprite> CardSprites;
 
     public static readonly List<string> MONTHS = new List<string>() { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
@@ -42,6 +53,7 @@ public class GameManager : MonoBehaviour
         offsetPoints = 0;
         pts1 = pts2 = offsetPoints;
         p1LastChoose = true;
+        scores.Clear();
     }
 
     public void Koi()
@@ -57,12 +69,13 @@ public class GameManager : MonoBehaviour
 
         if(pointsToAdd != 0)
         {
-            pts1 -= pointsToAdd;
-            pts2 += pointsToAdd;
+            pts1 = Mathf.Clamp(pts1 - pointsToAdd, 0, originalPts*2);
+            pts2 = Mathf.Clamp(pts2 + pointsToAdd, 0, originalPts * 2);
             offsetPoints += pointsToAdd;
 
             GameEventsManager.instance.gameEvents.OnPointsAdded();
         }
+        scores.Add(new Vector2(pts1, pts2));
         //Si pointsToAdd es negativo -> gana player1 (izquierda)
     }
 
@@ -70,7 +83,8 @@ public class GameManager : MonoBehaviour
     {
         if (Mathf.Abs(offsetPoints) >= originalPts)
         {
-            GameEventsManager.instance.gameEvents.OnWin(Get_WinCondition());
+            Win = Get_WinCondition();
+            GameEventsManager.instance.gameEvents.OnWin(Win);
         }
         else
         {
@@ -80,6 +94,7 @@ public class GameManager : MonoBehaviour
 
     public void EndRound()
     {
+        scores.Add(new Vector2(pts1, pts2));
         GameEventsManager.instance.gameEvents.OnRoundEnd();
     }
 
@@ -89,7 +104,8 @@ public class GameManager : MonoBehaviour
         print("Next round "+ round);
         if(round > maxRounds)
         {
-            GameEventsManager.instance.gameEvents.OnWin(Get_WinCondition());
+            Win = Get_WinCondition();
+            GameEventsManager.instance.gameEvents.OnWin(Win);
         }
         else
         {

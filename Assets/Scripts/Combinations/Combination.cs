@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 public class Combination : MonoBehaviour
 {
-    TMP_Text titleText, infoText;
-    GameObject reborde;
-    Transform cardTransform;
-    [Header("Debug")]
-    [SerializeField]Sprite[] cardSprites;
+    [SerializeField] TMP_Text titleText, infoText;
+    [SerializeField] GameObject reborde;
+    [SerializeField] Transform cardTransform;
+    
+    List<Sprite> cardSprites;
 
     public Sprite openSprite, closeSprite;
 
@@ -35,13 +35,14 @@ public class Combination : MonoBehaviour
     void Awake()
     {
         cardCombination = AllCombinationData.GetData(CombinationType);
+        cardSprites = GameManager.instance.CardSprites;
         FindComponents();
 
         toggleInfo = false;
+        chosePanelScript = FindObjectOfType<CombiChosePanel>();
 
         SetInfo();
 
-        chosePanelScript = GetComponentInParent<CombiChosePanel>();
     }
 
     public void FindComponents()

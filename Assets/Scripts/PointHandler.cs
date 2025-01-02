@@ -90,6 +90,7 @@ public class PointHandler : MonoBehaviour
         StartCoroutine(IncreasePointsToAdd_Corr());
     }
 
+    //multplica los puntos a añadir por el koi
     IEnumerator IncreasePointsToAdd_Corr()
     {
         TMP_Text t = (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd);

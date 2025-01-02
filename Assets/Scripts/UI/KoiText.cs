@@ -57,11 +57,13 @@ public class KoiText : MonoBehaviour
         textGlow.text = text.text;
     }
 
+    //Cuando se acaba la ronda y hay mas de x1 koi, hace una animacion
     public void Tingle()
     {
         animator.SetTrigger("addkoi");
     }
 
+    //Cuanto termina, manda un mensaje al pointhandler
     public void SendEndTingleMessage()
     {
         FindObjectOfType<PointHandler>().KoiText_IncreasePts();

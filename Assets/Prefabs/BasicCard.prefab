@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6172923678040572484}
   - component: {fileID: 1402427894891167941}
-  - component: {fileID: 2791064798529105356}
+  - component: {fileID: 1204110369508522984}
   m_Layer: 5
-  m_Name: Card
+  m_Name: BasicCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,7 +45,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2425524731316136644}
   m_CullTransparentMesh: 1
---- !u!114 &2791064798529105356
+--- !u!114 &1204110369508522984
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
