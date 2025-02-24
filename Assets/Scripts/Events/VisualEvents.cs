@@ -13,4 +13,13 @@ public class VisualEvents
             onPointsAddedToDisplay(col);
         }
     }
+
+    public event Action<bool, Action, float> onStartFadeCircle;
+    public void OnStartFadeCircle(bool In, Action f = null, float delay = 1.75f)
+    {
+        if (onStartFadeCircle != null)
+        {
+            onStartFadeCircle(In, (f == null ? () => { } : f), delay);
+        }
+    }
 }

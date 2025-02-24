@@ -76,7 +76,7 @@ public class PointHandler : MonoBehaviour
         if(GameManager.instance.koi > 1)
         {
             PanelJuego.GetComponent<Animator>().SetTrigger("zoomkoi");
-            FindObjectOfType<KoiText>().Tingle();
+            FindObjectOfType<KoiText>().Boom();
         }
         else
         {

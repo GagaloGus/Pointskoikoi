@@ -38,6 +38,7 @@ public class RoundText : MonoBehaviour
     //Evento de animacion
     public void ChangeRound_Animation()
     {
-        text.text = $"Ronda {GameManager.instance.round}";
+        string month = GameManager.MONTHS[Mathf.Clamp(GameManager.instance.round - 1, 0, 11)];
+        text.text = $"Ronda {GameManager.instance.round}\n<size=55>{month}";
     }
 }

@@ -16,6 +16,13 @@ public class RainbowText : MonoBehaviour
         Rainbow();
     }
 
+    public void ChangeText(string text)
+    {
+        og = text;
+        Revert();
+        Rainbow();
+    }
+
     public void Rainbow()
     {
         colors = new List<string>

@@ -44,6 +44,12 @@ public static class CoolFunctions
         return content;
     }
 
+    /// <summary>
+    /// Ejecuta una funcion con un retraso
+    /// </summary>
+    /// <param name="mb">Monobehaviour, escribir "this"</param>
+    /// <param name="f">La funcion</param>
+    /// <param name="delay">Retraso en segundos</param>
     public static void Invoke(this MonoBehaviour mb, Action f, float delay)
     {
         mb.StartCoroutine(InvokeRoutine(f, delay));

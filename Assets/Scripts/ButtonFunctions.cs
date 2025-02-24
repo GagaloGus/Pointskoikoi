@@ -30,6 +30,7 @@ public class ButtonFunctions : MonoBehaviour
 
     public void Exit()
     {
-        Application.Quit();
+        GameEventsManager.instance.visualEvents.
+            OnStartFadeCircle(true, () => { Application.Quit(); });
     }
 }

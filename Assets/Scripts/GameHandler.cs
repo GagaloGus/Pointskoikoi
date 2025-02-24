@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +29,7 @@ public class GameHandler : MonoBehaviour
         GameEventsManager.instance.gameEvents.resetGame -= ResetGame;
         GameEventsManager.instance.gameEvents.onPointsAdded -= AddPoints;
     }
-    
+
     private void Awake()
     {
         Transform PanelCont = GameObject.FindGameObjectWithTag("PanelPrincipal").transform;
@@ -54,20 +53,26 @@ public class GameHandler : MonoBehaviour
     private void Start()
     {
         GameManager.instance.StartUpGame();
+        GameEventsManager.instance.visualEvents.OnStartFadeCircle(false);
+
         ShowRoundText(1);
     }
 
     void ShowRoundText(int round)
     {
-        roundAnnounceText.SetActive(true);
-        roundAnnounceText.GetComponentInChildren<TMP_Text>().text = $"Ronda {round}";
-        roundAnnounceText.GetComponent<Animator>().SetTrigger("a");
-    }
+        string month = GameManager.MONTHS[Mathf.Clamp(GameManager.instance.round - 1, 0, 11)];
 
+        roundAnnounceText.SetActive(true);
+        roundAnnounceText.GetComponentInChildren<TMP_Text>().text = $"Ronda {round}\n<size=70>{month}";
+        roundAnnounceText.GetComponent<Animator>().SetTrigger("a");
+
+        FindObjectOfType<MonthCards>().ChangeCardTextures();
+    }
+    
     public void EndRound()
     {
-        roundEndText.SetActive(true);
-        EnableButtons(false);
+        /*roundEndText.SetActive(true);
+        EnableButtons(false);*/
     }
 
     public void ChangeRound(int round)
@@ -82,7 +87,8 @@ public class GameHandler : MonoBehaviour
 
     void ResetGame()
     {
-
+        finalScore.SetActive(false);
+        ShowRoundText(1);
     }
 
     void ResetSetup()
@@ -103,7 +109,7 @@ public class GameHandler : MonoBehaviour
     {
         EnableButtons(false);
 
-        finalScore.SetActive(true );   
+        finalScore.SetActive(true);
     }
 
 }

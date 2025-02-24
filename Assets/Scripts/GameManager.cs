@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
     public bool p1Choose;
     public bool p1LastChoose;
     public GameMode gameMode;
-    public Win_States Win;
     public List<Vector2> scores;
 
     [Header("UI")]
@@ -32,7 +31,9 @@ public class GameManager : MonoBehaviour
     public List<Sprite> CardSprites;
 
     public static readonly List<string> MONTHS = new List<string>() { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
-    public static readonly string ROUNDCOUNT_KEY = "ROUNDKEY", ROUNDTEXT_KEY = "ROUNDTEXTKEY", OFFSETPOINTS_KEY = "OFFSET";
+    public static readonly string 
+        ROUNDCOUNT_KEY = "ROUNDKEY", 
+        OFFSETPOINTS_KEY = "OFFSET";
 
     private void Awake()
     {
@@ -65,17 +66,17 @@ public class GameManager : MonoBehaviour
 
     public void AddPoints()
     {
-        pointsToAdd*=koi;
 
         if(pointsToAdd != 0)
         {
+            pointsToAdd*=koi;
             pts1 = Mathf.Clamp(pts1 - pointsToAdd, 0, originalPts*2);
             pts2 = Mathf.Clamp(pts2 + pointsToAdd, 0, originalPts * 2);
             offsetPoints += pointsToAdd;
 
             GameEventsManager.instance.gameEvents.OnPointsAdded();
+            scores.Add(new Vector2(pts1, pts2));
         }
-        scores.Add(new Vector2(pts1, pts2));
         //Si pointsToAdd es negativo -> gana player1 (izquierda)
     }
 
@@ -83,8 +84,7 @@ public class GameManager : MonoBehaviour
     {
         if (Mathf.Abs(offsetPoints) >= originalPts)
         {
-            Win = Get_WinCondition();
-            GameEventsManager.instance.gameEvents.OnWin(Win);
+            GameEventsManager.instance.gameEvents.OnWin(Get_WinCondition());
         }
         else
         {
@@ -96,19 +96,21 @@ public class GameManager : MonoBehaviour
     {
         scores.Add(new Vector2(pts1, pts2));
         GameEventsManager.instance.gameEvents.OnRoundEnd();
+
+        NextRound();
     }
 
     public void NextRound()
     {
-        round++;
-        print("Next round "+ round);
-        if(round > maxRounds)
+        if(round >= maxRounds)
         {
-            Win = Get_WinCondition();
-            GameEventsManager.instance.gameEvents.OnWin(Win);
+            GameEventsManager.instance.gameEvents.OnWin(Get_WinCondition());
         }
         else
         {
+            round++;
+            print("Next round " + round);
+
             GameEventsManager.instance.gameEvents.OnRoundChange(round);
             ResetSetup();
         }
@@ -130,12 +132,12 @@ public class GameManager : MonoBehaviour
     public void ResetGame()
     {
         offsetPoints = 0;
-        koi = 1;
-        pointsToAdd = 0;
+        scores.Clear();
         pts1 = pts2 = originalPts;
         round = 1;
+        ResetSetup();
         GameEventsManager.instance.gameEvents.ResetGame();
-        GameEventsManager.instance.gameEvents.ResetSetup();
+
     }
 
     public Win_States Get_WinCondition()
@@ -161,6 +163,7 @@ public class GameManager : MonoBehaviour
 
     public void ChangeScene(string sceneName)
     {
-        SceneManager.LoadScene(sceneName);
+        GameEventsManager.instance.visualEvents.
+            OnStartFadeCircle(true, () => { SceneManager.LoadScene(sceneName); });
     }
 }

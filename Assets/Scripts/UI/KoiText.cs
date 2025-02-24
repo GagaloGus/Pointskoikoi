@@ -7,13 +7,12 @@ using UnityEngine;
 public class KoiText : MonoBehaviour
 {
     Color[] koiColors;
-    TMP_Text text, textGlow;
+    TMP_Text text;
     Animator animator;
 
     private void Awake()
     {
         text = GetComponent<TMP_Text>();
-        textGlow = transform.GetChild(0).GetComponent<TMP_Text>();
         animator = GetComponent<Animator>();
     }
 
@@ -30,7 +29,6 @@ public class KoiText : MonoBehaviour
         GameEventsManager.instance.gameEvents.resetGame -= ResetGame;
         GameEventsManager.instance.gameEvents.resetSetup -= ResetSetup;
     }
-
 
     private void Start()
     {
@@ -54,11 +52,12 @@ public class KoiText : MonoBehaviour
         int index = GameManager.instance.koi % koiColors.Length;
         text.color = koiColors[index];
         text.text = $"<size=80>koi</size>\nx{GameManager.instance.koi}";
-        textGlow.text = text.text;
+        ChangeChildText(text.text);
+        animator.SetTrigger("increasekoi");
     }
 
     //Cuando se acaba la ronda y hay mas de x1 koi, hace una animacion
-    public void Tingle()
+    public void Boom()
     {
         animator.SetTrigger("addkoi");
     }
@@ -67,5 +66,13 @@ public class KoiText : MonoBehaviour
     public void SendEndTingleMessage()
     {
         FindObjectOfType<PointHandler>().KoiText_IncreasePts();
+    }
+
+    void ChangeChildText(string text)
+    {
+        foreach (Transform child in transform)
+        {
+            child.GetComponent<TMP_Text>().text = text;
+        }
     }
 }

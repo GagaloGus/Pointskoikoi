@@ -7,26 +7,36 @@ public class FinalScore : MonoBehaviour
 {
     List<Vector2> scores;
     public GameObject textPrefab;
-    private void Awake()
+    GameObject winP1, winP2, options;
+    RainbowText title;
+    private void OnEnable()
     {
-        scores = GameManager.instance.scores;
+        title = transform.Find("Titulo").GetComponent<RainbowText>();
+        title.ChangeText("Puntuacion final");
+        scores = new List<Vector2>(GameManager.instance.scores);
         foreach(Transform t in transform.Find("Punts"))
         {
             Destroy(t.gameObject);
         }
-    }
 
-    private void Start()
-    {
+        winP1 = transform.Find("Win").Find("1").gameObject;
+        winP2 = transform.Find("Win").Find("2").gameObject;
+        options = transform.Find("Opciones").gameObject;
+
+        winP1.SetActive(false);
+        winP2.SetActive(false);
+        options.SetActive(false);
+
         StartCoroutine(ShowScores_Corr());
     }
 
     IEnumerator ShowScores_Corr()
     {
+        yield return new WaitForSeconds(1f);
         int index = 1;
         foreach (Vector2 s in scores)
         {
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.6f);
             Transform t = Instantiate(textPrefab).transform;
             t.SetParent(transform.Find("Punts"), false);
 
@@ -48,20 +58,33 @@ public class FinalScore : MonoBehaviour
             index++;
         }
 
-        yield return new WaitForSeconds(0.5f);
-
-
+        yield return new WaitForSeconds(1);
+        ShowWinner();
+        options.SetActive(true);
     }
 
     void ShowWinner()
     {
-        switch (GameManager.instance.Win)
+        //Temporal, habra animaciones y cosas asi
+        switch (GameManager.instance.Get_WinCondition())
         {
             case Win_States.Player1:
-                transform.Find("2").gameObject.SetActive(false);
+                title.ChangeText("Gana el Jugador 1");
+                winP1.SetActive(true);
+                winP2.SetActive(false);
+                print("Gana jugador 1");
                 break;
             case Win_States.Player2:
-                transform.Find("1").gameObject.SetActive(false);
+                title.ChangeText("Gana el Jugador 2");
+                winP1.SetActive(false);
+                winP2.SetActive(true);
+                print("Gana jugador 2");
+                break;
+            case Win_States.Tie:
+                title.ChangeText("Empate");
+                winP1.SetActive(true);
+                winP2.SetActive(true);
+                print("Empate");
                 break;
         }
     }
