@@ -25,6 +25,9 @@ public class RainbowText : MonoBehaviour
 
     public void Rainbow()
     {
+        if (string.IsNullOrEmpty(og))
+            og = GetComponent<TMP_Text>().text;
+
         colors = new List<string>
         {
             "ff1100", "f58f0a", "ffea00", "09ff00", "00e5ff", "2b00ff", "bb00ff",

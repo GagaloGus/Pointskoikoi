@@ -40,6 +40,14 @@ public class GameEvents
         }
     }
 
+    public event Action onStartGame;
+    public void OnStartGame()
+    {
+        if(onStartGame != null)
+        {
+            onStartGame();
+        }
+    }
 
     public event Action<Win_States> onWin;
     public void OnWin(Win_States win)

@@ -6,24 +6,36 @@ using UnityEngine;
 
 public class RoundText : MonoBehaviour
 {
+    GameObject child;
     TMP_Text text;
     Animator animator;
     private void OnEnable()
     {
         GameEventsManager.instance.gameEvents.onRoundChange += ChangeRound;
         GameEventsManager.instance.gameEvents.resetGame += ResetGame;
+        GameEventsManager.instance.gameEvents.onStartGame += StartGame;
     }
 
     private void OnDisable()
     {
         GameEventsManager.instance.gameEvents.onRoundChange -= ChangeRound;
         GameEventsManager.instance.gameEvents.resetGame -= ResetGame;
+        GameEventsManager.instance.gameEvents.onStartGame -= StartGame;
     }
 
     private void Awake()
     {
-        text = GetComponent<TMP_Text>();
-        animator = GetComponent<Animator>();
+        child = transform.GetChild(0).gameObject;
+        text = child.GetComponent<TMP_Text>();
+        animator = child.GetComponent<Animator>();
+
+        child.SetActive(false);
+    }
+
+    private void StartGame()
+    {
+        child.SetActive(true);
+        animator.SetTrigger("enter");
     }
 
     private void ChangeRound(int round)
@@ -33,12 +45,5 @@ public class RoundText : MonoBehaviour
     private void ResetGame()
     {
         animator.SetTrigger("change");
-    }
-
-    //Evento de animacion
-    public void ChangeRound_Animation()
-    {
-        string month = GameManager.MONTHS[Mathf.Clamp(GameManager.instance.round - 1, 0, 11)];
-        text.text = $"Ronda {GameManager.instance.round}\n<size=55>{month}";
     }
 }

@@ -50,7 +50,7 @@ public static class CoolFunctions
     /// <param name="mb">Monobehaviour, escribir "this"</param>
     /// <param name="f">La funcion</param>
     /// <param name="delay">Retraso en segundos</param>
-    public static void Invoke(this MonoBehaviour mb, Action f, float delay)
+    public static void Invoke(MonoBehaviour mb, Action f, float delay)
     {
         mb.StartCoroutine(InvokeRoutine(f, delay));
     }
@@ -60,6 +60,19 @@ public static class CoolFunctions
         yield return new WaitForSeconds(delay);
         f();
     }
+
+    public static string Get_GamemodeName(GameMode gm)
+    {
+        string n = "";
+
+        if (gm == GameMode.Classic)
+            n = "Clasico";
+        else if (gm == GameMode.PointThief)
+            n = "Roba puntos";
+
+        return n;
+    }
+
 
     public static List<T> ShuffleList<T>(List<T> lista)
     {

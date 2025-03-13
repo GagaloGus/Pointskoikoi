@@ -8,7 +8,7 @@ using UnityEngine.UI;
 //Lleva el contador de las rondas, los botones
 public class GameHandler : MonoBehaviour
 {
-    GameObject roundAnnounceText, finalScore;
+    GameObject roundAnnounceText, gameModeText, finalScore;
     Button KoiButton, EndRoundButton, AddPointsButton, p1addpt, p2addpt;
 
     private void OnEnable()
@@ -19,6 +19,7 @@ public class GameHandler : MonoBehaviour
         GameEventsManager.instance.gameEvents.resetSetup += ResetSetup;
         GameEventsManager.instance.gameEvents.resetGame += ResetGame;
         GameEventsManager.instance.gameEvents.onPointsAdded += AddPoints;
+        GameEventsManager.instance.gameEvents.onStartGame += StartGame;
     }
 
     private void OnDisable()
@@ -29,6 +30,7 @@ public class GameHandler : MonoBehaviour
         GameEventsManager.instance.gameEvents.resetSetup -= ResetSetup;
         GameEventsManager.instance.gameEvents.resetGame -= ResetGame;
         GameEventsManager.instance.gameEvents.onPointsAdded -= AddPoints;
+        GameEventsManager.instance.gameEvents.onStartGame -= StartGame;
     }
 
     private void Awake()
@@ -36,6 +38,7 @@ public class GameHandler : MonoBehaviour
         Transform PanelCont = GameObject.FindGameObjectWithTag("PanelPrincipal").transform;
 
         roundAnnounceText = PanelCont.parent.Find("Round").gameObject;
+        gameModeText = PanelCont.parent.Find("GameMode").gameObject;
 
         KoiButton = PanelCont.Find("KoiButton").GetComponent<Button>();
         EndRoundButton = PanelCont.Find("EndRoundButton").GetComponent<Button>();
@@ -46,14 +49,17 @@ public class GameHandler : MonoBehaviour
         finalScore = FindObjectOfType<FinalScore>(true).gameObject;
 
         roundAnnounceText.SetActive(false);
+        gameModeText.SetActive(false);
         finalScore.SetActive(false);
     }
 
     private void Start()
     {
-        GameManager.instance.StartUpGame();
         GameEventsManager.instance.visualEvents.OnStartFadeCircle(false);
+    }
 
+    public void StartGame()
+    {      
         ShowRoundText(1);
     }
 
@@ -66,6 +72,23 @@ public class GameHandler : MonoBehaviour
         roundAnnounceText.GetComponent<Animator>().SetTrigger("a");
 
         FindObjectOfType<MonthCards>().ChangeCardTextures();
+
+        if(round == 1)
+        {
+            roundAnnounceText.GetComponent<Animator>().SetFloat("speed", 0.6f);
+            gameModeText.GetComponent<Animator>().SetFloat("speed", 0.6f);
+
+            CoolFunctions.Invoke(this, () =>
+            {
+                gameModeText.SetActive(true);
+                gameModeText.GetComponentInChildren<TMP_Text>().text = $"- {CoolFunctions.Get_GamemodeName(GameManager.instance.gameMode)} -";
+                gameModeText.GetComponent<Animator>().SetTrigger("a");
+            }, 0.35f);
+        }
+        else
+        {
+            roundAnnounceText.GetComponent<Animator>().SetFloat("speed", 1);
+        }
     }
     
     public void EndRound()

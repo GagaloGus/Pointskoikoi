@@ -31,9 +31,10 @@ public class GameManager : MonoBehaviour
     public List<Sprite> CardSprites;
 
     public static readonly List<string> MONTHS = new List<string>() { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
-    public static readonly string 
-        ROUNDCOUNT_KEY = "ROUNDKEY", 
-        OFFSETPOINTS_KEY = "OFFSET";
+    public static readonly string
+        ROUNDCOUNT_KEY = "ROUNDKEY",
+        P1_PTS = "P1PTS",
+        P2_PTS = "P2PTS";
 
     private void Awake()
     {
@@ -66,18 +67,26 @@ public class GameManager : MonoBehaviour
 
     public void AddPoints()
     {
-
-        if(pointsToAdd != 0)
+        if(gameMode == GameMode.PointThief)
         {
-            pointsToAdd*=koi;
-            pts1 = Mathf.Clamp(pts1 - pointsToAdd, 0, originalPts*2);
-            pts2 = Mathf.Clamp(pts2 + pointsToAdd, 0, originalPts * 2);
-            offsetPoints += pointsToAdd;
+            if (pointsToAdd != 0)
+            {
+                //Si pointsToAdd es negativo -> gana player1 (izquierda)
+                pointsToAdd *= koi;
+                pts1 = Mathf.Clamp(pts1 - pointsToAdd, 0, originalPts * 2);
+                pts2 = Mathf.Clamp(pts2 + pointsToAdd, 0, originalPts * 2);
+                offsetPoints += pointsToAdd;
 
-            GameEventsManager.instance.gameEvents.OnPointsAdded();
-            scores.Add(new Vector2(pts1, pts2));
+                GameEventsManager.instance.gameEvents.OnPointsAdded();
+                scores.Add(new Vector2(pts1, pts2));
+            }
         }
-        //Si pointsToAdd es negativo -> gana player1 (izquierda)
+        else if(gameMode == GameMode.Classic)
+        {
+
+        }    
+
+        
     }
 
     public void AfterPointsUI()
@@ -102,7 +111,7 @@ public class GameManager : MonoBehaviour
 
     public void NextRound()
     {
-        if(round >= maxRounds)
+        if (round >= maxRounds)
         {
             GameEventsManager.instance.gameEvents.OnWin(Get_WinCondition());
         }
@@ -118,8 +127,16 @@ public class GameManager : MonoBehaviour
 
     public void StartUpGame()
     {
+        ResetParameters();
+        GameEventsManager.instance.gameEvents.OnStartGame();
+    }
+
+    void ResetParameters()
+    {
+        offsetPoints = 0;
+        scores.Clear();
         pts1 = pts2 = originalPts;
-        ResetGame();
+        round = 1;
     }
 
     public void ResetSetup()
@@ -131,10 +148,7 @@ public class GameManager : MonoBehaviour
 
     public void ResetGame()
     {
-        offsetPoints = 0;
-        scores.Clear();
-        pts1 = pts2 = originalPts;
-        round = 1;
+        ResetParameters();
         ResetSetup();
         GameEventsManager.instance.gameEvents.ResetGame();
 
