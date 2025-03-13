@@ -69,9 +69,9 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.39607844
+        value: 0.46
         inSlope: 0
-        outSlope: -1.0802139
+        outSlope: -1.2545455
         tangentMode: 69
         weightedMode: 0
         inWeight: 0.33333334
@@ -177,9 +177,9 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.39607844
+        value: 0.46
         inSlope: 0
-        outSlope: -1.0802139
+        outSlope: -1.2545455
         tangentMode: 69
         weightedMode: 0
         inWeight: 0.33333334

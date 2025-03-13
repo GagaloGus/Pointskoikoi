@@ -11,8 +11,9 @@ public class CombiChosePanel : MonoBehaviour
     TMP_Text infoText, pointText;
     [SerializeField] List<CombiPointsPair> combinationsChosen = new();
     public int finalPoints;
-    Button Accept;
     Transform Content;
+
+    PointHandler pointHandler;
 
     private void OnEnable()
     {
@@ -26,10 +27,14 @@ public class CombiChosePanel : MonoBehaviour
     {
         infoText = transform.Find("pointstring").GetComponent<TMP_Text>();
         pointText = transform.Find("pointall").GetComponent<TMP_Text>();
-        Accept = transform.Find("Accept").GetComponent<Button>();
         Content = GetComponentInChildren<ScrollRect>().transform.Find("Viewport").Find("Content");
+        pointHandler = FindObjectOfType<PointHandler>();
     }
 
+    /// <summary>
+    /// Activa las combinaciones pasadas en la lista al activar el panel de puntos
+    /// </summary>
+    /// <param name="pairs">Las combinaciones guardadas</param>
     public void ActivateChoices(List<CombiPointsPair> pairs)
     {
         foreach(Transform t in Content)
@@ -40,7 +45,9 @@ public class CombiChosePanel : MonoBehaviour
             c.CloseInfoButton();
             c.SetExtraPoints(0);
 
-            CombiPointsPair card = Array.Find(pairs.ToArray(), x => x.combi == AllCombinationData.GetData(c.CombinationType));
+            CombiPointsPair card = Array.Find(
+                pairs.ToArray(), 
+                x => x.combi == AllCombinationData.GetData(c.CombinationType));
 
             if (card != null)
             {
@@ -55,6 +62,12 @@ public class CombiChosePanel : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Añade o quita una combinacion de la lista
+    /// </summary>
+    /// <param name="combi"></param>
+    /// <param name="extraCards"></param>
+    /// <param name="add"></param>
     public void SelectCombination(CardCombination combi, int extraCards, bool add)
     {       
         if (add)
@@ -70,6 +83,11 @@ public class CombiChosePanel : MonoBehaviour
         WriteCombinations();
     }
 
+    /// <summary>
+    /// Actualiza la combinacion al añadir cartas extras
+    /// </summary>
+    /// <param name="combi">La combinacion en question</param>
+    /// <param name="extraCards">Cuantas cartas se añaden</param>
     public void UpdateCombination(CardCombination combi, int extraCards)
     {
         foreach (CombiPointsPair pair in combinationsChosen)
@@ -84,6 +102,9 @@ public class CombiChosePanel : MonoBehaviour
         WriteCombinations();
     }
 
+    /// <summary>
+    /// Escribe las combinaciones y puntos en la parte inferior del panel
+    /// </summary>
     void WriteCombinations()
     {
         infoText.text = "";
@@ -102,6 +123,10 @@ public class CombiChosePanel : MonoBehaviour
         pointText.text = $"{finalPoints} pts";
     }
 
+    /// <summary>
+    /// Calcula todos los puntos de la lista de combinaciones
+    /// </summary>
+    /// <returns>Los puntos totales</returns>
     public int AllPoints()
     {
         int pts = 0;
@@ -114,20 +139,31 @@ public class CombiChosePanel : MonoBehaviour
         return pts;
     }
 
+    /// <summary>
+    /// -funcion de boton-
+    /// Acepta las combinaciones y las manda para que se mantengan en pantalla
+    /// </summary>
     public void AcceptCombinations()
     {
         print($"{finalPoints} pts totales");
-        FindObjectOfType<PointHandler>().HoldPoints(combinationsChosen, finalPoints);
+        pointHandler.HoldPoints(combinationsChosen, finalPoints);
         gameObject.SetActive(false);
     }
     
+    /// <summary>
+    /// -funcion de boton-
+    /// Sale sin hacer nada
+    /// </summary>
     public void Leave()
     {
-        FindObjectOfType<PointHandler>().CancelHoldPoints();
+        pointHandler.CancelHoldPoints();
         gameObject.SetActive(false);
     }
 }
 
+/// <summary>
+/// Clase de combinacion + cartas extra que tiene
+/// </summary>
 [System.Serializable]
 public class CombiPointsPair
 {

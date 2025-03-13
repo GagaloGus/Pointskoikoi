@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum Win_States { Player1, Player2, Tie }
-public enum GameMode { PointThief, MostPoints }
+public enum GameMode { PointThief, Classic }
 
 public class GameManager : MonoBehaviour
 {

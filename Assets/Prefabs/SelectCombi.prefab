@@ -175,7 +175,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: -129.53
+  m_Spacing: 7.36
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
@@ -422,8 +422,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 9
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1f427012518f8f04784f1be4c8ad8bb7, type: 2}
+  m_sharedMaterial: {fileID: 6089973470889738712, guid: 1f427012518f8f04784f1be4c8ad8bb7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -453,9 +453,9 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -814,7 +814,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1009.9, y: 631}
+  m_SizeDelta: {x: 1013.62, y: 631}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7397754659704150022
 CanvasRenderer:
@@ -944,62 +944,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334acd54546f439469f46bb10985ae09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardSprites:
-  - {fileID: 21300000, guid: 3a418580a2fe6c84f9a15c63c1850f87, type: 3}
-  - {fileID: 21300000, guid: 7dd4deeac1bf6ad46a273a8ec050aa98, type: 3}
-  - {fileID: 21300000, guid: bb0db55a1cc76e7469f78ee43b584c88, type: 3}
-  - {fileID: 21300000, guid: 636d43349ed6ee94d800dc7a321fe481, type: 3}
-  - {fileID: 21300000, guid: e06fa7e6c6d293c43b3fb4de958e7a03, type: 3}
-  - {fileID: 21300000, guid: a5dfd1bc5f85ddc46a8a303c1205c98c, type: 3}
-  - {fileID: 21300000, guid: cda5ad818996bf44abbe2694aca9e670, type: 3}
-  - {fileID: 21300000, guid: d6eb28bc1cd16514493f63b1ca716d8a, type: 3}
-  - {fileID: 21300000, guid: f2305be692a77db48a5000f420716c84, type: 3}
-  - {fileID: 21300000, guid: 2559524283ef62241a3f54bb4ef76d28, type: 3}
-  - {fileID: 21300000, guid: 3fe1f2afc86ff5f47b46f67c3ea616c7, type: 3}
-  - {fileID: 21300000, guid: 59f1df026f8e5c548bd14c1f8cb78586, type: 3}
-  - {fileID: 21300000, guid: 0bfd16aae463e3a4fac9dff1cba015cd, type: 3}
-  - {fileID: 21300000, guid: cbde698a3ebc0b34a800209e0517bfcb, type: 3}
-  - {fileID: 21300000, guid: f2e300945fc34ee40bc624aaf4144139, type: 3}
-  - {fileID: 21300000, guid: d53cde0e3644ecb4f94017c626a9324e, type: 3}
-  - {fileID: 21300000, guid: d2b8a1b7a809297429cbfc253258c14b, type: 3}
-  - {fileID: 21300000, guid: 9cedef57df389804496192c1d419c99b, type: 3}
-  - {fileID: 21300000, guid: c570541479165ef47b50891841e35dfe, type: 3}
-  - {fileID: 21300000, guid: 48a929604a9d33245baa778c6e8c08f5, type: 3}
-  - {fileID: 21300000, guid: 2d9e3c00dc562ad4f9e1b8e663887fee, type: 3}
-  - {fileID: 21300000, guid: caddfa84e0e62b342be092897de711d3, type: 3}
-  - {fileID: 21300000, guid: b17061e2cb98783439a32e099ed15385, type: 3}
-  - {fileID: 21300000, guid: 9beffb8ccd6b65a4b8e450e3b21f8f20, type: 3}
-  - {fileID: 21300000, guid: c8832ef2b5948b04c9dc9f61aea2e96a, type: 3}
-  - {fileID: 21300000, guid: a0e15ce25bc09ea4f905e7bac94cd31f, type: 3}
-  - {fileID: 21300000, guid: 0bcf6bb304b8e814bbbe9ba5f93d44a5, type: 3}
-  - {fileID: 21300000, guid: 24b2c85c6f8e07045a77f3253ed09b0e, type: 3}
-  - {fileID: 21300000, guid: e527ef7d9a403bc44a92143a1bf2ed8a, type: 3}
-  - {fileID: 21300000, guid: 81c4d4867e94be74bad62bb3edff0cb6, type: 3}
-  - {fileID: 21300000, guid: 46c708c41e47f5b45838a52d6d5234b8, type: 3}
-  - {fileID: 21300000, guid: 2b9d0c34c39d10a42b8f8e2894b7e964, type: 3}
-  - {fileID: 21300000, guid: cd6e33012e4ed2847ae1b8839ce31875, type: 3}
-  - {fileID: 21300000, guid: 23b06a48780a328429e97eeedd6402d0, type: 3}
-  - {fileID: 21300000, guid: d84e95025083a9a4d9681245f860095a, type: 3}
-  - {fileID: 21300000, guid: 2b4a73edb40f1ff46a686016e4422be7, type: 3}
-  - {fileID: 21300000, guid: 95a6f2d8cc8d2d34caf3cd9876f612c5, type: 3}
-  - {fileID: 21300000, guid: c492f2ae70f3cc749aad53c88b3dcc64, type: 3}
-  - {fileID: 21300000, guid: c5a7dd7992bf58143891d95d2908bca3, type: 3}
-  - {fileID: 21300000, guid: a2beeb04ec5a7954697f9cf7697810ac, type: 3}
-  - {fileID: 21300000, guid: 7673c62264fe44b44bda7fbcf372a38c, type: 3}
-  - {fileID: 21300000, guid: ef78a0fad6a8c6247a3ef369cde5691a, type: 3}
-  - {fileID: 21300000, guid: 39109007787da82479f327c41b1ab84a, type: 3}
-  - {fileID: 21300000, guid: 4e3648ef5b1cf944ca97f7256cdfbefa, type: 3}
-  - {fileID: 21300000, guid: b44f31d8c1a07be4a9d1c6a9cd8dab88, type: 3}
-  - {fileID: 21300000, guid: dafb6df0c3d2e2547ac6ead72c0326fc, type: 3}
-  - {fileID: 21300000, guid: 302a6117980196a4e80db06f2f88c0f1, type: 3}
-  - {fileID: 21300000, guid: 6bbbcad8ddc51e94c9eadbde59a2fed1, type: 3}
   openSprite: {fileID: 21300000, guid: 00fff8a2a5a13b940ade6a573c7095ee, type: 3}
   closeSprite: {fileID: 21300000, guid: 483ece7bc8a547640b8b6eb3e8b4c22c, type: 3}
+  XTarget: 1150
   toggleInfo: 0
   openRight: 1
-  cardPrefab: {fileID: 2425524731316136644, guid: 3b70446905560b14a81699797b7dae39, type: 3}
-  CombinationType: 0
+  cardPrefab: {fileID: 2425524731316136644, guid: 9472083adeaddc44ba944d183513f15b, type: 3}
+  CombinationType: 2
   cardCombination:
+    combination_enum: 0
     cardSpritesIndex: 
     title: 
     info: 
@@ -1042,8 +995,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 139}
-  m_SizeDelta: {x: 1240.1, y: 102.51999}
+  m_AnchoredPosition: {x: 0, y: 125}
+  m_SizeDelta: {x: 1380.71, y: 108.15}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &4351029486176300405
 CanvasRenderer:
@@ -1075,8 +1028,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 10 cartas basicas   <color=yellow>1 pt</color>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1f427012518f8f04784f1be4c8ad8bb7, type: 2}
+  m_sharedMaterial: {fileID: 6089973470889738712, guid: 1f427012518f8f04784f1be4c8ad8bb7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1100,8 +1053,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100
-  m_fontSizeBase: 100
+  m_fontSize: 109.2
+  m_fontSizeBase: 109.2
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1209,8 +1162,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: '-'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1f427012518f8f04784f1be4c8ad8bb7, type: 2}
+  m_sharedMaterial: {fileID: 6089973470889738712, guid: 1f427012518f8f04784f1be4c8ad8bb7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1311,7 +1264,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 708.2, y: 328.4}
+  m_SizeDelta: {x: 743.1412, y: 328.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5903420021235538463
 CanvasRenderer:
@@ -1343,8 +1296,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 5 cartas de animal y 1pt extra por cada carta adicional
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1f427012518f8f04784f1be4c8ad8bb7, type: 2}
+  m_sharedMaterial: {fileID: 6089973470889738712, guid: 1f427012518f8f04784f1be4c8ad8bb7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1368,8 +1321,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 75.95
-  m_fontSizeBase: 75.95
+  m_fontSize: 76.66
+  m_fontSizeBase: 76.66
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1610,8 +1563,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: +
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1f427012518f8f04784f1be4c8ad8bb7, type: 2}
+  m_sharedMaterial: {fileID: 6089973470889738712, guid: 1f427012518f8f04784f1be4c8ad8bb7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

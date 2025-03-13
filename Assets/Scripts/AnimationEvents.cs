@@ -27,14 +27,13 @@ public class AnimationEvents : MonoBehaviour
         GameManager.instance.NextRound();
     }
 
+    //Solo sirve para las cartas del mes
     public void ChangeMonthCard()
     {   
         int i = transform.GetSiblingIndex();
         int month = Mathf.Clamp(GameManager.instance.round - 1, 0, 11);
 
-        List<Sprite> CardSprites = GameManager.instance.CardSprites;
-
-        transform.Find("F").GetComponent<Image>().sprite = CardSprites[i + (month * 4)];
+        transform.Find("F").GetComponent<Image>().sprite = GameManager.instance.CardSprites[i + (month * 4)];
 
     }
 }

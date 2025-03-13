@@ -6,13 +6,14 @@ using UnityEngine.UI;
 
 public class Combination : MonoBehaviour
 {
-    [SerializeField] TMP_Text titleText, infoText;
-    [SerializeField] GameObject reborde;
-    [SerializeField] Transform cardTransform;
+    TMP_Text titleText, infoText;
+    GameObject reborde;
+    Transform cardTransform;
     
     List<Sprite> cardSprites;
 
     public Sprite openSprite, closeSprite;
+    public float XTarget = 1234;
 
     RectTransform infoRect;
     GameObject extraPoints, extrabutton;
@@ -37,17 +38,42 @@ public class Combination : MonoBehaviour
         cardCombination = AllCombinationData.GetData(CombinationType);
         cardSprites = GameManager.instance.CardSprites;
         FindComponents();
+        SetInfo();
+
+        reborde.SetActive(SelectToggle.isOn);
+        infoRect.anchoredPosition = Vector2.zero;
 
         toggleInfo = false;
-        chosePanelScript = FindObjectOfType<CombiChosePanel>();
+        MinusButton.onClick.RemoveAllListeners();
+        PlusButton.onClick.RemoveAllListeners();
 
-        SetInfo();
+        MinusButton.onClick.AddListener(() => { AddExtraCards(false); });
+        PlusButton.onClick.AddListener(() => { AddExtraCards(true); });
 
     }
 
+    private void OnEnable()
+    {
+        //Cambia las cartas del mes solo a la combinacion de estaciones
+        if(CombinationType == Combinations.Estaciones)
+        {
+            for (int i = 0; i < cardTransform.childCount; i++)
+            {
+                Transform t = cardTransform.GetChild(i);
+                int month = Mathf.Clamp(GameManager.instance.round - 1, 0, 11);
+
+                t.GetComponent<Image>().sprite = cardSprites[i + (month * 4)];
+            }
+        }
+    }
+
+    /// <summary>
+    /// Asigna todas las variables a sus componentes en el juego
+    /// </summary>
     public void FindComponents()
     {
         infoRect = transform.Find("Info").GetComponent<RectTransform>();
+        chosePanelScript = FindObjectOfType<CombiChosePanel>();
         cardTransform = transform.Find("Cards");
         titleText = transform.Find("Title").GetComponent<TMP_Text>();
         reborde = transform.Find("reborde").gameObject;
@@ -60,17 +86,10 @@ public class Combination : MonoBehaviour
         MinusButton = extraPoints.transform.Find("rest").GetComponent<Button>();
         PlusButton = extraPoints.transform.Find("add").GetComponent<Button>();
         ExtraText = extraPoints.transform.Find("extra").GetComponentInChildren<TMP_Text>(true);
-    
-        MinusButton.onClick.RemoveAllListeners();
-        PlusButton.onClick.RemoveAllListeners();
 
-        MinusButton.onClick.AddListener(() => { AddExtraCards(false); });
-        PlusButton.onClick.AddListener(() => { AddExtraCards(true); });
-
-        SelectToggle = transform.Find("selectButton").GetComponent<Toggle>();
-
-        reborde.SetActive(SelectToggle.isOn);
+        SelectToggle = transform.Find("selectButton").GetComponent<Toggle>();        
     }
+
 
     public void SetExtraPoints(int p)
     {
@@ -78,18 +97,28 @@ public class Combination : MonoBehaviour
         ExtraText.text = p.ToString();
     }
 
+    /// <summary>
+    /// Cierra la informacion
+    /// </summary>
     public void CloseInfoButton()
     {
         toggleInfo = true;
         ToggleInfoButton(true);
     }
 
+    /// <summary>
+    /// Selecciona esta combinacion
+    /// </summary>
     public void ToggleSelectedCombi()
     {
         reborde.SetActive(SelectToggle.isOn);
         chosePanelScript.SelectCombination(cardCombination, extraCardsAdded, SelectToggle.isOn);
     }
 
+    /// <summary>
+    /// Añade o quita cartas extra
+    /// </summary>
+    /// <param name="add"></param>
     public void AddExtraCards(bool add)
     {
         extraCardsAdded = Mathf.Clamp(extraCardsAdded + (add ? 1 : -1), 0, 9);
@@ -101,6 +130,9 @@ public class Combination : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Instancia las cartas, escribe la informacion, etc etc
+    /// </summary>
     void SetInfo()
     {
         titleText.text = $"{cardCombination.title}   <color=yellow>{cardCombination.points} pt</color>";
@@ -120,7 +152,10 @@ public class Combination : MonoBehaviour
         }
     }
 
-    //Funcion del boton
+    /// <summary>
+    /// Se llama cuando se pulsa el boton de informacion
+    /// </summary>
+    /// <param name="forceInstant">Si el movimiento es instantaneo o no</param>
     public void ToggleInfoButton(bool forceInstant)
     {
         toggleInfo = !toggleInfo;
@@ -132,11 +167,17 @@ public class Combination : MonoBehaviour
 
         StopAllCoroutines();
 
-        StartCoroutine(MoveInfoPanel((toggleInfo ? 1100 * (openRight ? 1 : -1) : 0), forceInstant));
+        StartCoroutine(MoveInfoPanel((toggleInfo ? XTarget * (openRight ? 1 : -1) : 0), forceInstant));
 
 
     }
 
+    /// <summary>
+    /// Mueve el panel de la informacion hacia los lados
+    /// </summary>
+    /// <param name="targetX">A que direccion moverse</param>
+    /// <param name="forceInsant">Si el movimiento es instantaneo o no</param>
+    /// <returns></returns>
     IEnumerator MoveInfoPanel(float targetX, bool forceInsant)
     {
         bool right = infoRect.anchoredPosition.x - targetX < 0;

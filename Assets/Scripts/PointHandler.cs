@@ -84,13 +84,18 @@ public class PointHandler : MonoBehaviour
         }
     }
 
-    //Llamado por el evento de animacion del koitext
+    /// <summary>
+    /// Llamado por el evento de animacion del koitext
+    /// </summary>
     public void KoiText_IncreasePts()
     {
         StartCoroutine(IncreasePointsToAdd_Corr());
     }
 
-    //multplica los puntos a añadir por el koi
+    /// <summary>
+    /// multplica los puntos a añadir por el koi
+    /// </summary>
+    /// <returns></returns>
     IEnumerator IncreasePointsToAdd_Corr()
     {
         TMP_Text t = (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd);
@@ -144,7 +149,6 @@ public class PointHandler : MonoBehaviour
     {
         gameHandler.EnableButtons(true);
         GameManager.instance.p1Choose = GameManager.instance.p1LastChoose;
-        print("Cancelao");
     }
 
     public void HoldPoints(List<CombiPointsPair> pairs, int pts)
@@ -206,7 +210,10 @@ public class PointHandler : MonoBehaviour
         }
     }
 
-    //Hace la animacion de a�adir puntos a los contadores progresivamente
+    /// <summary>
+    /// Hace la animacion de añadir puntos a los contadores progresivamente
+    /// </summary>
+    /// <returns></returns>
     IEnumerator PointNumberCounting()
     {
         int originalPointAmount = GameManager.instance.originalPts,

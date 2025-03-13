@@ -4,10 +4,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 //Lleva el contador de las rondas, los botones
 public class GameHandler : MonoBehaviour
 {
-    GameObject roundAnnounceText, roundEndText, finalScore;
+    GameObject roundAnnounceText, finalScore;
     Button KoiButton, EndRoundButton, AddPointsButton, p1addpt, p2addpt;
 
     private void OnEnable()
@@ -35,7 +36,6 @@ public class GameHandler : MonoBehaviour
         Transform PanelCont = GameObject.FindGameObjectWithTag("PanelPrincipal").transform;
 
         roundAnnounceText = PanelCont.parent.Find("Round").gameObject;
-        roundEndText = PanelCont.parent.Find("RoundEnd").gameObject;
 
         KoiButton = PanelCont.Find("KoiButton").GetComponent<Button>();
         EndRoundButton = PanelCont.Find("EndRoundButton").GetComponent<Button>();
@@ -46,7 +46,6 @@ public class GameHandler : MonoBehaviour
         finalScore = FindObjectOfType<FinalScore>(true).gameObject;
 
         roundAnnounceText.SetActive(false);
-        roundEndText.SetActive(false);
         finalScore.SetActive(false);
     }
 
