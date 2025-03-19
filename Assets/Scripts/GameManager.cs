@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     public static readonly List<string> MONTHS = new List<string>() { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
     public static readonly string
         ROUNDCOUNT_KEY = "ROUNDKEY",
+        OFFSET_PTS = "OFFSETPTS",
         P1_PTS = "P1PTS",
         P2_PTS = "P2PTS";
 
@@ -67,26 +68,24 @@ public class GameManager : MonoBehaviour
 
     public void AddPoints()
     {
-        if(gameMode == GameMode.PointThief)
+        if(pointsToAdd != 0)
         {
-            if (pointsToAdd != 0)
-            {
+            if (gameMode == GameMode.PointThief)
+            {   
                 //Si pointsToAdd es negativo -> gana player1 (izquierda)
                 pointsToAdd *= koi;
                 pts1 = Mathf.Clamp(pts1 - pointsToAdd, 0, originalPts * 2);
                 pts2 = Mathf.Clamp(pts2 + pointsToAdd, 0, originalPts * 2);
-                offsetPoints += pointsToAdd;
-
-                GameEventsManager.instance.gameEvents.OnPointsAdded();
-                scores.Add(new Vector2(pts1, pts2));
+                offsetPoints += pointsToAdd;   
             }
-        }
-        else if(gameMode == GameMode.Classic)
-        {
+            else if (gameMode == GameMode.Classic)
+            {
 
-        }    
+            }
 
-        
+            GameEventsManager.instance.gameEvents.OnPointsAdded();
+            scores.Add(new Vector2(pts1, pts2));
+        }  
     }
 
     public void AfterPointsUI()
@@ -135,7 +134,8 @@ public class GameManager : MonoBehaviour
     {
         offsetPoints = 0;
         scores.Clear();
-        pts1 = pts2 = originalPts;
+
+        pts1 = pts2 = gameMode == GameMode.PointThief ? originalPts : 0;
         round = 1;
     }
 

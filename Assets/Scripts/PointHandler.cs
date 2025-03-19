@@ -29,13 +29,15 @@ public class PointHandler : MonoBehaviour
         GameEventsManager.instance.gameEvents.onPointsAdded += AddPoints;
         GameEventsManager.instance.gameEvents.resetGame += ResetGame;
         GameEventsManager.instance.gameEvents.resetSetup += ResetSetup;
+        GameEventsManager.instance.gameEvents.onStartGame += StartGame;
     }
 
     private void OnDisable()
     {
         GameEventsManager.instance.gameEvents.onPointsAdded -= AddPoints;
         GameEventsManager.instance.gameEvents.resetGame -= ResetGame;
-        GameEventsManager.instance.gameEvents.resetSetup += ResetSetup;
+        GameEventsManager.instance.gameEvents.resetSetup -= ResetSetup;
+        GameEventsManager.instance.gameEvents.onStartGame -= StartGame;
     }
 
     private void Awake()
@@ -58,11 +60,18 @@ public class PointHandler : MonoBehaviour
 
     void Start()
     {
-        player1Pt.text = GameManager.instance.originalPts.ToString();
-        player2Pt.text = GameManager.instance.originalPts.ToString();
         player1ptAdd.gameObject.SetActive(false);
         player2ptAdd.gameObject.SetActive(false);
         PointPanel.SetActive(false);
+
+        player1Pt.text = "";
+        player2Pt.text = "";
+    }
+
+    void StartGame()
+    {
+        player1Pt.text = GameManager.instance.pts1.ToString();
+        player2Pt.text = GameManager.instance.pts2.ToString();
     }
 
     void AddPoints()
@@ -192,10 +201,6 @@ public class PointHandler : MonoBehaviour
 
     IEnumerator UpdateUIPointsCoroutine()
     {
-        //Si pointdif es negativo -> gana player1 (izquierda)
-        int pointDif = GameManager.instance.pts1 - GameManager.instance.pts2;
-        bool player1 = pointDif < 0;
-
         if (!resetGame)
         {
             GameEventsManager.instance.visualEvents.OnPointsAddedToDisplay(Color.green);
@@ -216,14 +221,11 @@ public class PointHandler : MonoBehaviour
     /// <returns></returns>
     IEnumerator PointNumberCounting()
     {
-        int originalPointAmount = GameManager.instance.originalPts,
-            offsetPoints = GameManager.instance.offsetPoints;
-
         Animator L_anim = player1Pt.gameObject.GetComponent<Animator>(), 
                  R_anim = player2Pt.gameObject.GetComponent<Animator>();
 
-        int L_newNum = originalPointAmount - offsetPoints, 
-            R_newNum = originalPointAmount + offsetPoints,
+        int L_newNum = GameManager.instance.pts1, 
+            R_newNum = GameManager.instance.pts2,
             L_oldNum = int.Parse(player1Pt.text), 
             R_oldNum = int.Parse(player2Pt.text);
 
@@ -233,33 +235,28 @@ public class PointHandler : MonoBehaviour
 
         while (L_oldNum != L_newNum)
         {
-            if (L_oldNum < L_newNum)
+            if(GameManager.instance.gameMode == GameMode.PointThief)
             {
-                L_oldNum++; R_oldNum--;
+                if (L_oldNum < L_newNum)
+                {
+                    L_oldNum++; R_oldNum--;
+                }
+                else if (L_oldNum > L_newNum)
+                {
+                    L_oldNum--; R_oldNum++;
+                }
             }
-            else if (L_oldNum > L_newNum)
+            else if (GameManager.instance.gameMode == GameMode.Classic)
             {
-                L_oldNum--; R_oldNum++;
+                L_oldNum++; R_oldNum++;
             }
+            
 
             player1Pt.text = L_oldNum.ToString();
             player2Pt.text = R_oldNum.ToString();
 
             L_anim.SetTrigger("bounce");
             R_anim.SetTrigger("bounce");
-
-            if(int.Parse(player1Pt.text) > originalPointAmount * 2)
-            {
-                player1Pt.text = (originalPointAmount * 2).ToString();
-                player2Pt.text = 0.ToString();
-                break;
-            }
-            else if(int.Parse(player1Pt.text) < 0)
-            {
-                player1Pt.text = 0.ToString();
-                player2Pt.text = (originalPointAmount * 2).ToString();
-                break;
-            }
 
             yield return new WaitForSeconds(0.3f/speedRed);
         }
