@@ -9,13 +9,13 @@ using UnityEngine.UI;
 public class GameHandler : MonoBehaviour
 {
     GameObject roundAnnounceText, gameModeText, finalScore;
-    Button KoiButton, EndRoundButton, AddPointsButton, p1addpt, p2addpt;
+    Button p1addpt, p2addpt;
+    Transform roundButtonsParent, PanelCont;
 
     private void OnEnable()
     {
         GameEventsManager.instance.gameEvents.onWin += Win;
         GameEventsManager.instance.gameEvents.onRoundChange += ChangeRound;
-        GameEventsManager.instance.gameEvents.onRoundEnd += EndRound;
         GameEventsManager.instance.gameEvents.resetSetup += ResetSetup;
         GameEventsManager.instance.gameEvents.resetGame += ResetGame;
         GameEventsManager.instance.gameEvents.onPointsAdded += AddPoints;
@@ -26,7 +26,6 @@ public class GameHandler : MonoBehaviour
     {
         GameEventsManager.instance.gameEvents.onWin -= Win;
         GameEventsManager.instance.gameEvents.onRoundChange -= ChangeRound;
-        GameEventsManager.instance.gameEvents.onRoundEnd -= EndRound;
         GameEventsManager.instance.gameEvents.resetSetup -= ResetSetup;
         GameEventsManager.instance.gameEvents.resetGame -= ResetGame;
         GameEventsManager.instance.gameEvents.onPointsAdded -= AddPoints;
@@ -35,14 +34,12 @@ public class GameHandler : MonoBehaviour
 
     private void Awake()
     {
-        Transform PanelCont = GameObject.FindGameObjectWithTag("PanelPrincipal").transform;
+        PanelCont = GameObject.FindGameObjectWithTag("PanelPrincipal").transform;
 
         roundAnnounceText = PanelCont.parent.Find("Round").gameObject;
         gameModeText = PanelCont.parent.Find("GameMode").gameObject;
 
-        KoiButton = PanelCont.Find("KoiButton").GetComponent<Button>();
-        EndRoundButton = PanelCont.Find("EndRoundButton").GetComponent<Button>();
-        AddPointsButton = PanelCont.Find("AddPointsButton").GetComponent<Button>();
+        roundButtonsParent = PanelCont.Find("RoundButtons");
         p1addpt = PanelCont.Find("AddLeftPoints").GetComponent<Button>();
         p2addpt = PanelCont.Find("AddRightPoints").GetComponent<Button>();
 
@@ -61,6 +58,12 @@ public class GameHandler : MonoBehaviour
     public void StartGame()
     {      
         ShowRoundText(1);
+
+        PanelCont.GetComponent<Animator>().SetFloat("speed", 1);
+        if(GameManager.instance.gameMode == GameMode.Classic)
+        {
+            roundButtonsParent.Find("Koi").gameObject.SetActive(false);
+        }
     }
 
     void ShowRoundText(int round)
@@ -90,12 +93,6 @@ public class GameHandler : MonoBehaviour
             roundAnnounceText.GetComponent<Animator>().SetFloat("speed", 1);
         }
     }
-    
-    public void EndRound()
-    {
-        /*roundEndText.SetActive(true);
-        EnableButtons(false);*/
-    }
 
     public void ChangeRound(int round)
     {
@@ -120,9 +117,9 @@ public class GameHandler : MonoBehaviour
 
     public void EnableButtons(bool enable)
     {
-        KoiButton.interactable = enable;
-        EndRoundButton.interactable = enable;
-        AddPointsButton.interactable = enable;
+        foreach(Transform t in roundButtonsParent)
+            t.GetComponent<Button>().interactable = enable;
+
         p1addpt.interactable = enable;
         p2addpt.interactable = enable;
     }

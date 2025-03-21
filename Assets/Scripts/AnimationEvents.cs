@@ -32,15 +32,22 @@ public class AnimationEvents : MonoBehaviour
     public void ChangeMonthCard()
     {   
         int i = transform.GetSiblingIndex();
-        int month = Mathf.Clamp(GameManager.instance.round - 1, 0, 11);
 
-        transform.Find("F").GetComponent<Image>().sprite = GameManager.instance.CardSprites[i + (month * 4)];
+        transform.Find("F").GetComponent<Image>().sprite = 
+            GameManager.instance.CardSprites[i + (GameManager.instance.get_MonthNumber() * 4)];
     }
 
     //Evento de animacion de roundcounttext
     public void ChangeRound_Animation()
     {
-        string month = GameManager.MONTHS[Mathf.Clamp(GameManager.instance.round - 1, 0, 11)];
+        string month = GameManager.MONTHS[GameManager.instance.get_MonthNumber()];
         GetComponent<TMP_Text>().text = $"Ronda {GameManager.instance.round}\n<size=55>{month}";
+    }
+
+    //Evento de animacion del koi text
+    //Cuanto termina, manda un mensaje al pointhandler
+    public void SendEndKoiEndMessage()
+    {
+        FindObjectOfType<PointHandler>().KoiText_IncreasePts();
     }
 }

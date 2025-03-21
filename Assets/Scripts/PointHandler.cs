@@ -207,6 +207,7 @@ public class PointHandler : MonoBehaviour
         }
 
         yield return StartCoroutine(PointNumberCounting());
+
         yield return new WaitForSeconds(1);
 
         if (!resetGame)
@@ -224,18 +225,23 @@ public class PointHandler : MonoBehaviour
         Animator L_anim = player1Pt.gameObject.GetComponent<Animator>(), 
                  R_anim = player2Pt.gameObject.GetComponent<Animator>();
 
-        int L_newNum = GameManager.instance.pts1, 
+        int L_newNum = GameManager.instance.pts1,
             R_newNum = GameManager.instance.pts2,
             L_oldNum = int.Parse(player1Pt.text), 
             R_oldNum = int.Parse(player2Pt.text);
 
-        float speedRed = Mathf.Abs(L_newNum - L_oldNum)/3;
+        float speedRed = 
+            Mathf.Abs(
+                Mathf.Max(L_newNum - L_oldNum, R_newNum - R_oldNum) /3
+            );
 
-        if (speedRed <= 0) { speedRed = 1; }
+        if (speedRed <= 0) { speedRed = 2; }
 
-        while (L_oldNum != L_newNum)
+        while (L_oldNum != L_newNum || R_oldNum != R_newNum)
         {
-            if(GameManager.instance.gameMode == GameMode.PointThief)
+            //print($"{L_oldNum}/{L_newNum} /// {R_oldNum}/{R_newNum}");
+
+            if (GameManager.instance.gameMode == GameMode.PointThief)
             {
                 if (L_oldNum < L_newNum)
                 {
@@ -245,18 +251,27 @@ public class PointHandler : MonoBehaviour
                 {
                     L_oldNum--; R_oldNum++;
                 }
+
+                L_anim.SetTrigger("bounce");
+                R_anim.SetTrigger("bounce");
             }
             else if (GameManager.instance.gameMode == GameMode.Classic)
             {
-                L_oldNum++; R_oldNum++;
+                if (L_oldNum != L_newNum)
+                {
+                    L_oldNum+= (L_oldNum < L_newNum ? 1 : -1);
+                    L_anim.SetTrigger("bounce");
+                }
+
+                if (R_oldNum != R_newNum)
+                {
+                    R_oldNum+= (R_oldNum < R_newNum ? 1 : -1);
+                    R_anim.SetTrigger("bounce");
+                }
             }
-            
 
             player1Pt.text = L_oldNum.ToString();
             player2Pt.text = R_oldNum.ToString();
-
-            L_anim.SetTrigger("bounce");
-            R_anim.SetTrigger("bounce");
 
             yield return new WaitForSeconds(0.3f/speedRed);
         }

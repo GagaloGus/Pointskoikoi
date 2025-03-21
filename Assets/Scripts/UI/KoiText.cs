@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class KoiText : MonoBehaviour
@@ -12,48 +14,56 @@ public class KoiText : MonoBehaviour
 
     private void Awake()
     {
-        text = GetComponent<TMP_Text>();
-        animator = GetComponent<Animator>();
+        text = GetComponentInChildren<TMP_Text>();
+        animator = GetComponentInChildren<Animator>();
     }
-
     private void OnEnable()
     {
         GameEventsManager.instance.gameEvents.koi += Koi;
-        GameEventsManager.instance.gameEvents.resetGame += ResetGame;
+        GameEventsManager.instance.gameEvents.onStartGame += StartUpGame;
         GameEventsManager.instance.gameEvents.resetSetup += ResetSetup;        
     }
 
     private void OnDisable()
     {
         GameEventsManager.instance.gameEvents.koi -= Koi;
-        GameEventsManager.instance.gameEvents.resetGame -= ResetGame;
+        GameEventsManager.instance.gameEvents.onStartGame -= StartUpGame;
         GameEventsManager.instance.gameEvents.resetSetup -= ResetSetup;
     }
 
     private void Start()
     {
         koiColors = GameManager.instance.koiColors;
+        text.gameObject.SetActive(false);
     }
 
-    void ResetGame()
+    void StartUpGame()
     {
-
+        if(GameManager.instance.gameMode == GameMode.PointThief) 
+        {
+            text.gameObject.SetActive(true);
+            ChangeText(true);
+        }
     }
 
     void ResetSetup()
     {
-        text.color = Color.white;
-        text.text = $"<size=80>koi</size>\nx1";
-        animator.SetTrigger("reset");
+        ChangeText(true);
+        ChangeChildText();
+        animator.SetTrigger("increasekoi");
     }
 
     void Koi()
     {
-        int index = GameManager.instance.koi % koiColors.Length;
-        text.color = koiColors[index];
-        text.text = $"<size=80>koi</size>\nx{GameManager.instance.koi}";
-        ChangeChildText(text.text);
+        ChangeText(false);
+        ChangeChildText();
         animator.SetTrigger("increasekoi");
+    }
+
+    void ChangeText(bool reset)
+    {
+        text.color = reset ? Color.white : koiColors[GameManager.instance.koi % koiColors.Length];
+        text.text = $"<size=80>koi</size>\nx{GameManager.instance.koi}";
     }
 
     //Cuando se acaba la ronda y hay mas de x1 koi, hace una animacion
@@ -62,17 +72,11 @@ public class KoiText : MonoBehaviour
         animator.SetTrigger("addkoi");
     }
 
-    //Cuanto termina, manda un mensaje al pointhandler
-    public void SendEndTingleMessage()
+    void ChangeChildText()
     {
-        FindObjectOfType<PointHandler>().KoiText_IncreasePts();
-    }
-
-    void ChangeChildText(string text)
-    {
-        foreach (Transform child in transform)
+        foreach (Transform child in animator.transform)
         {
-            child.GetComponent<TMP_Text>().text = text;
+            child.GetComponent<TMP_Text>().text = text.text;
         }
     }
 }

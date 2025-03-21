@@ -10,7 +10,8 @@ public class ButtonFunctions : MonoBehaviour
 
     public void Koi()
     {
-        GameManager.instance.Koi();
+        if(GameManager.instance.gameMode == GameMode.PointThief)
+            GameManager.instance.Koi();
     }
 
     public void ResetGame()

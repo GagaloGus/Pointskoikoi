@@ -59,6 +59,10 @@ public class GameManager : MonoBehaviour
         scores.Clear();
     }
 
+    public int get_MonthNumber()
+    {
+        return Mathf.Clamp(round - 1, 0, 11);
+    }
     public void Koi()
     {
         koi++;
@@ -80,7 +84,12 @@ public class GameManager : MonoBehaviour
             }
             else if (gameMode == GameMode.Classic)
             {
+                pointsToAdd = Mathf.Abs(pointsToAdd);
 
+                if (p1LastChoose)
+                    pts1 += pointsToAdd;
+                else 
+                    pts2 += pointsToAdd;
             }
 
             GameEventsManager.instance.gameEvents.OnPointsAdded();

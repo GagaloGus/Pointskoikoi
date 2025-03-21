@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6172923678040572484}
   - component: {fileID: 1402427894891167941}
-  - component: {fileID: 3503138219201180715}
   - component: {fileID: 1891480800342873732}
+  - component: {fileID: 7458089848846937999}
   m_Layer: 5
   m_Name: MonthCard
   m_TagString: Untagged
@@ -48,7 +48,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2425524731316136644}
   m_CullTransparentMesh: 1
---- !u!95 &3503138219201180715
+--- !u!114 &1891480800342873732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2425524731316136644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e7c9d50cb81de64f8e8c5ceb9f329ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &7458089848846937999
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -69,18 +81,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1891480800342873732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2425524731316136644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e7c9d50cb81de64f8e8c5ceb9f329ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4643150304218533525
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +107,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4643150304218533525}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.0000371933}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -182,7 +182,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7608138008261189717}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.0000371933}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

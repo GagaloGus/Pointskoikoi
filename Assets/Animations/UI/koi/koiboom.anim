@@ -582,7 +582,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.8833333
-    functionName: SendEndTingleMessage
+    functionName: SendEndKoiEndMessage
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

@@ -22,7 +22,7 @@ public class VFXCanvas : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         shock = transform.Find("Shock").GetComponent<Image>();
         shock.gameObject.SetActive(false);

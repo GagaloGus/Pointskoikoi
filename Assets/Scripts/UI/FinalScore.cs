@@ -43,11 +43,11 @@ public class FinalScore : MonoBehaviour
             //Colores de la puntuacion
             string pt1 = "white";
             string pt2 = "white";
-            if(s.x > GameManager.instance.originalPts)
+            if(s.x > s.y)
             {
                 pt1 = "green"; pt2 = "red";
             }
-            else if(s.x < GameManager.instance.originalPts)
+            else if(s.x < s.y)
             {
                 pt1 = "red"; pt2 = "green";
             }
