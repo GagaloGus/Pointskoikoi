@@ -75,4 +75,13 @@ public class GameEvents
             onRoundEnd();
         }
     }
+
+    public event Action onSetupOpen;
+    public void OnSetupOpen()
+    {
+        if(onSetupOpen != null)
+        {
+            onSetupOpen();
+        }
+    }
 }

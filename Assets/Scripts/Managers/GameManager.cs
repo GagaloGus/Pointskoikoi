@@ -13,18 +13,28 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [Header("Puntos")]
+    public int pts1;
+    public int pts2;
+    public int koi;
+
+    [Header("Config PointThief")]
     public int originalPts = 30;
-    public int pts1, pts2, offsetPoints, pointsToAdd;
+    public int offsetPoints, pointsToAdd;
+
+    [Header("Config Classic")]
+    public int koiPointsForDouble;
+
 
     [Header("Rounds")]
     public int round;
-    public int maxRounds, koi;
+    public int maxRounds;
 
     [Header("Settings")]
     public bool p1Choose;
     public bool p1LastChoose;
     public GameMode gameMode;
     public List<Vector2> scores;
+    
 
     [Header("UI")]
     public Color[] koiColors;
@@ -70,6 +80,10 @@ public class GameManager : MonoBehaviour
         GameEventsManager.instance.gameEvents.Koi();
     }
 
+    /// <summary>
+    /// Si los puntos a añadir son mayor de 0, añade los puntos al jugador respectivo
+    /// y llama al evento ONPOINTSADDED
+    /// </summary>
     public void AddPoints()
     {
         if(pointsToAdd != 0)
@@ -86,20 +100,27 @@ public class GameManager : MonoBehaviour
             {
                 pointsToAdd = Mathf.Abs(pointsToAdd);
 
+                if (pointsToAdd >= koiPointsForDouble)
+                    pointsToAdd *= 2;
+
                 if (p1LastChoose)
                     pts1 += pointsToAdd;
                 else 
                     pts2 += pointsToAdd;
             }
 
+            print("Putons");
             GameEventsManager.instance.gameEvents.OnPointsAdded();
             scores.Add(new Vector2(pts1, pts2));
         }  
     }
 
+    /// <summary>
+    /// Funcion que se llama justo al terminar la ronda
+    /// </summary>
     public void AfterPointsUI()
     {
-        if (Mathf.Abs(offsetPoints) >= originalPts)
+        if (Mathf.Abs(offsetPoints) >= originalPts && gameMode == GameMode.PointThief)
         {
             GameEventsManager.instance.gameEvents.OnWin(Get_WinCondition());
         }

@@ -17,7 +17,7 @@ public class PointHandler : MonoBehaviour
     Button p1addpt, p2addpt;
 
     [SerializeField]
-    List<CombiPointsPair> 
+    List<CombiPointsPair>
         pairsP1 = new List<CombiPointsPair>(),
         pairsP2 = new List<CombiPointsPair>();
 
@@ -76,21 +76,31 @@ public class PointHandler : MonoBehaviour
 
     void AddPoints()
     {
+        print("Añadir puntos");
         resetGame = false;
         Animator t = (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd).GetComponent<Animator>();
 
         t.SetBool("koi", GameManager.instance.koi > 1);
 
         //Mueve el textokoi
-        if(GameManager.instance.koi > 1)
+        if (GameManager.instance.gameMode == GameMode.PointThief)
         {
-            PanelJuego.GetComponent<Animator>().SetTrigger("zoomkoi");
-            FindObjectOfType<KoiText>().Boom();
+            if (GameManager.instance.koi > 1)
+            {
+                PanelJuego.GetComponent<Animator>().SetTrigger("zoomkoi");
+                FindObjectOfType<KoiText>().Boom();
+            }
+            else
+                t.SetTrigger("add");
         }
-        else
+        else if (GameManager.instance.gameMode == GameMode.Classic)
         {
-            t.SetTrigger("add");
+            if (GameManager.instance.pointsToAdd / 2 >= GameManager.instance.koiPointsForDouble)
+                KoiText_IncreasePts();
+            else
+                t.SetTrigger("add");
         }
+
     }
 
     /// <summary>
@@ -109,31 +119,44 @@ public class PointHandler : MonoBehaviour
     {
         TMP_Text t = (GameManager.instance.p1Choose ? player1ptAdd : player2ptAdd);
 
-        int originalpt = Mathf.Abs(GameManager.instance.pointsToAdd/GameManager.instance.koi),
-            finalpt = Mathf.Abs(GameManager.instance.pointsToAdd);
+        int originalpt = 0, finalpt = 0;
 
-        float speedRed = Mathf.Abs(finalpt - originalpt)/3;
+        if (GameManager.instance.gameMode == GameMode.PointThief)
+            originalpt = Mathf.Abs(GameManager.instance.pointsToAdd / GameManager.instance.koi);
+        else if (GameManager.instance.gameMode == GameMode.Classic)
+            originalpt = Mathf.Abs(GameManager.instance.pointsToAdd) / 2;
 
-        while (originalpt != finalpt) 
+        finalpt = Mathf.Abs(GameManager.instance.pointsToAdd);
+
+        float speedRed = Mathf.Abs(finalpt - originalpt) / 3;
+
+        while (originalpt != finalpt)
         {
             originalpt++;
             t.GetComponent<Animator>().SetTrigger("koiadded");
 
             t.text = $"+{originalpt}";
 
-            yield return new WaitForSeconds(0.2f/speedRed);
+            yield return new WaitForSeconds(0.2f / speedRed);
         }
 
         yield return new WaitForSeconds(0.5f);
         t.GetComponent<Animator>().SetTrigger("pointsadded");
     }
 
+    /// <summary>
+    /// Al resetear el juego, se vuelven a actualizar los puntos
+    /// para ponerlos a su estado original
+    /// </summary>
     void ResetGame()
     {
         resetGame = true;
         UpdateUIPoints();
     }
 
+    /// <summary>
+    /// Reseta las listas que almacenan las combinaciones
+    /// </summary>
     void ResetSetup()
     {
         pairsP1 = new List<CombiPointsPair>();
@@ -142,6 +165,7 @@ public class PointHandler : MonoBehaviour
         player2ptAdd.gameObject.SetActive(false);
         finalPoints = 0;
     }
+
 
     public void ActivatePointPanel(bool player1)
     {
@@ -154,12 +178,20 @@ public class PointHandler : MonoBehaviour
         PointPanel.GetComponent<CombiChosePanel>().ActivateChoices(p);
     }
 
+    /// <summary>
+    /// Al pulsar el boton de cancelar al abrir el panel de puntos
+    /// </summary>
     public void CancelHoldPoints()
     {
         gameHandler.EnableButtons(true);
         GameManager.instance.p1Choose = GameManager.instance.p1LastChoose;
     }
 
+    /// <summary>
+    /// Guarda los puntos y los muestra al jugador correspondiente
+    /// </summary>
+    /// <param name="pairs">Combinaciones seleccionadas</param>
+    /// <param name="pts">puntos de la combinacion</param>
     public void HoldPoints(List<CombiPointsPair> pairs, int pts)
     {
         gameHandler.EnableButtons(true);
@@ -190,15 +222,23 @@ public class PointHandler : MonoBehaviour
             player1ptAdd.gameObject.SetActive(false);
             player2ptAdd.gameObject.SetActive(false);
         }
-        
+
     }
 
+    /// <summary>
+    /// Actualiza los puntos de la interfaz
+    /// </summary>
     public void UpdateUIPoints()
     {
         StopAllCoroutines();
         StartCoroutine(UpdateUIPointsCoroutine());
     }
 
+    /// <summary>
+    /// Actualiza los puntos de la interfaz, al terminar llama al 
+    /// GameManager AFTERPOINTSUI
+    /// </summary>
+    /// <returns></returns>
     IEnumerator UpdateUIPointsCoroutine()
     {
         if (!resetGame)
@@ -222,17 +262,17 @@ public class PointHandler : MonoBehaviour
     /// <returns></returns>
     IEnumerator PointNumberCounting()
     {
-        Animator L_anim = player1Pt.gameObject.GetComponent<Animator>(), 
+        Animator L_anim = player1Pt.gameObject.GetComponent<Animator>(),
                  R_anim = player2Pt.gameObject.GetComponent<Animator>();
 
         int L_newNum = GameManager.instance.pts1,
             R_newNum = GameManager.instance.pts2,
-            L_oldNum = int.Parse(player1Pt.text), 
+            L_oldNum = int.Parse(player1Pt.text),
             R_oldNum = int.Parse(player2Pt.text);
 
-        float speedRed = 
+        float speedRed =
             Mathf.Abs(
-                Mathf.Max(L_newNum - L_oldNum, R_newNum - R_oldNum) /3
+                Mathf.Max(L_newNum - L_oldNum, R_newNum - R_oldNum) / 3
             );
 
         if (speedRed <= 0) { speedRed = 2; }
@@ -259,13 +299,13 @@ public class PointHandler : MonoBehaviour
             {
                 if (L_oldNum != L_newNum)
                 {
-                    L_oldNum+= (L_oldNum < L_newNum ? 1 : -1);
+                    L_oldNum += (L_oldNum < L_newNum ? 1 : -1);
                     L_anim.SetTrigger("bounce");
                 }
 
                 if (R_oldNum != R_newNum)
                 {
-                    R_oldNum+= (R_oldNum < R_newNum ? 1 : -1);
+                    R_oldNum += (R_oldNum < R_newNum ? 1 : -1);
                     R_anim.SetTrigger("bounce");
                 }
             }
@@ -273,7 +313,7 @@ public class PointHandler : MonoBehaviour
             player1Pt.text = L_oldNum.ToString();
             player2Pt.text = R_oldNum.ToString();
 
-            yield return new WaitForSeconds(0.3f/speedRed);
+            yield return new WaitForSeconds(0.3f / speedRed);
         }
     }
 }

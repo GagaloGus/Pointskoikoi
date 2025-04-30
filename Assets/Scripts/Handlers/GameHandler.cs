@@ -66,6 +66,10 @@ public class GameHandler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Actualiza la informacion de la ronda al empezar una nueva
+    /// </summary>
+    /// <param name="round"></param>
     void ShowRoundText(int round)
     {
         string month = GameManager.MONTHS[Mathf.Clamp(GameManager.instance.round - 1, 0, 11)];
@@ -115,6 +119,10 @@ public class GameHandler : MonoBehaviour
         EnableButtons(true);
     }
 
+    /// <summary>
+    /// Activa o desactiva botones
+    /// </summary>
+    /// <param name="enable"></param>
     public void EnableButtons(bool enable)
     {
         foreach(Transform t in roundButtonsParent)

@@ -16,6 +16,10 @@ public class AnimationEvents : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Llamada por el texto de los puntos, cuando se suben hace el efecto
+    /// de que se añaden al contador
+    /// </summary>
     public void AddedPoints()
     {
         FindObjectOfType<PointHandler>().UpdateUIPoints();
